@@ -19,12 +19,6 @@ namespace syosetu_dl {
                 Console.WriteLine("发生错误: " + ex.Message);
             }
         }
-        /*
-        参数:base_url(目录url) from(开始的章节ID:通过url查看) to(结束章节ID) to_path(保存的文件夹名)
-        示例:https://novel18.syosetu.com/nxxxxcv/ 201 538 output
-        或者:https://ncode.syosetu.com/nxxxxxik/ 1 20 output
-        cmd:syosetu-dl.exe base_url from to to_path
-         */
         static async Task Main(string[] args) {
             if (args.Length == 0) return;
             using (HttpClient client = new HttpClient()) {
