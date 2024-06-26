@@ -1,5 +1,5 @@
 # syosetu-downloader
-syosetu网站下载小说
+一个小工具,用于在syosetu网站下载小说章节:
 
 使用说明:
 
