@@ -24,5 +24,3 @@ Example: https://novel18.syosetu.com/nxxxxcv/ 201 538 output
 Or: https://ncode.syosetu.com/nxxxxxik/ 1 20 output
 
 cmd:syosetu-dl.exe base_url from to to_path
-
-如果出现http报错就是请求速率达到上限,等一会再重新启动程序或者换个ip(记得修改参数从最近一次开始).
