@@ -37,8 +37,8 @@ https://novelup.plus/story/xxxxx
 
 https://www.alphapolis.co.jp/novel/xxxxx/yyyyy 
 ```
-无法爬取付费文章，需要Firefox。  
-*Cannot scrape paid articles; requires Firefox.*
+alphapolis:无法爬取付费文章,需要Firefox。  
+*alphapolis:Cannot scrape paid articles; requires Firefox.*
 
 cmd:
 ```bash
