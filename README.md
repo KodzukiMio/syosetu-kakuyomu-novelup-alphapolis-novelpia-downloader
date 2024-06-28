@@ -9,8 +9,8 @@ A small tool for downloading novel chapters from the japan novel website:
 
 参数(Parameters):
 - base_url (目录url | directory url)
-- from (开始的章节数 | starting chapter index)
-- to (结束章节数 | ending chapter index)
+- from (开始的章节下标(不是url后面的id) | starting chapter index)
+- to (结束章节下标 | ending chapter index)
 - to_path (保存的文件夹名 | name of the folder where it will be saved)
 
 注意(Note): 
