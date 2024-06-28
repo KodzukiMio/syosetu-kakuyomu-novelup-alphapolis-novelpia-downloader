@@ -40,7 +40,7 @@ https://www.alphapolis.co.jp/novel/xxxxx/yyyyy
 alphapolis:无法爬取付费文章,需要Firefox。  
 *alphapolis:Cannot scrape paid articles; requires Firefox.*
 
-cmd:
+CMD:
 ```bash
 syosetu-dl.exe base_url from to to_path
 ```
