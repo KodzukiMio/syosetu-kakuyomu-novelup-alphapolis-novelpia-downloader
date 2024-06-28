@@ -13,9 +13,9 @@ A small tool for downloading novel chapters from the japan novel website:
 
 支持:syosetu,kakuyomu,novelup,alphapolis
 
-示例(Example):syosetu-dl.exe https://novel18.syosetu.com/nxxxxcv/ 201 538 output
+示例(Example):syosetu-dl.exe https://novel18.syosetu.com/xxxxx 201 538 output
 
-或者(Or):syosetu-dl.exe https://ncode.syosetu.com/n9271iy/ 1 20 output
+或者(Or):syosetu-dl.exe https://ncode.syosetu.com/yyyyy 1 20 output
 
 https://kakuyomu.jp/works/xxxxx
 
