@@ -21,6 +21,6 @@ https://kakuyomu.jp/works/xxxxx
 
 https://novelup.plus/story/xxxxx
 
-https://www.alphapolis.co.jp/novel/xxxxx/yyyyy//无法爬取付费文章,需要Firefox浏览器
+https://www.alphapolis.co.jp/novel/xxxxx/yyyyy (无法爬取付费文章,需要Firefox)
 
 cmd:syosetu-dl.exe base_url from to to_path
