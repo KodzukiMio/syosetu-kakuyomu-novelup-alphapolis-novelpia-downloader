@@ -23,6 +23,8 @@ syosetu,kakuyomu,novelup,alphapolis
 示例(Example):
 ```bash
 syosetu-dl.exe https://novel18.syosetu.com/xxxxx 201 538 output
+
+意思是从第201章节到538章,后两个是章节下标不是url后面的id
 ```
 或者(Or):
 ```bash
