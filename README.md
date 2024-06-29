@@ -42,7 +42,7 @@ syosetu-dl https://novel18.syosetu.com/xxxxx 201 538 output
 ```bash
 syosetu-dl https://www.alphapolis.co.jp/novel/xxxxx/yyyyy 1 -1 output 
 ```
-!!IMPORTANT(重要):目录URL最后没有'/'字符!(The directory URL is missing the trailing '/' character!)
+IMPORTANT(重要):URL是目录页面的地址,结尾不要带'/'字符.(The directory URL is missing the trailing '/' character.)
 
 ### 支持的URL(Supported URL):
 ```bash
