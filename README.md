@@ -40,7 +40,7 @@ syosetu-dl.exe https://novel18.syosetu.com/xxxxx 201 538 output
 或者(Or):
 
 ```bash
-syosetu-dl.exe https://ncode.syosetu.com/yyyyy 1 20 output 
+syosetu-dl.exe https://ncode.syosetu.com/yyyyy 1 -1 output 
 ```
 
 其他平台(Other platforms):
