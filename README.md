@@ -40,11 +40,15 @@ syosetu-dl https://novel18.syosetu.com/xxxxx 201 538 output
 或者(Or):
 
 ```bash
-syosetu-dl https://ncode.syosetu.com/yyyyy 1 -1 output 
+syosetu-dl https://www.alphapolis.co.jp/novel/xxxxx/yyyyy 1 -1 output 
 ```
 
-其他平台(Other platforms):
-```bash 
+平台(platforms):
+```bash
+https://ncode.syosetu.com/xxxxx
+
+https://novel18.syosetu.com/xxxxx
+
 https://syosetu.org/novel/xxxxx 
 
 https://kakuyomu.jp/works/xxxxx 
