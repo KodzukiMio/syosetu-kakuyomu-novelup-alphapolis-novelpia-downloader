@@ -13,8 +13,8 @@
 
 ### 参数 (Parameters)
 - **base_url**: 目录URL | *Directory URL*
-- **from**: 开始的章节下标（从1开始，不是URL后面的ID）| *Starting chapter index (starts from 1, not the ID in the URL)*
-- **to**: 结束章节下标 | *Ending chapter index*
+- **from**: 开始章节的下标（从1开始，不是URL后面的ID）| *Starting chapter index (starts from 1, not the ID in the URL)*
+- **to**: 结束章节的下标 | *Ending chapter index*
     - 填写 `-1`，表示爬取到最后一章 (*You can set `to` as `-1`, which means downloading to end chapter*)
     - 注意：syosetu不支持 `-1` 参数 (*Note: syosetu does not support the parameter `-1`)*
     
