@@ -1,12 +1,6 @@
 ﻿using HtmlAgilityPack;
 using OpenQA.Selenium.Firefox;
-using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Net.Http;
-using System.Reflection.Metadata;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -30,7 +24,8 @@ namespace syosetu_dl {
                 Console.WriteLine($"{filePath}:已写入.");
             } else Console.WriteLine("文件已存在.");
         }
-        //https://ncode.syosetu.com/xxxxx|https://novel18.syosetu.com/xxxxx
+        //https://ncode.syosetu.com/xxxxx
+        //https://novel18.syosetu.com/xxxxx
         public static async Task<StringBuilder> syosetu(string base_url, int i) {
             StringBuilder str = new StringBuilder();
             using (HttpClient client = new HttpClient()) {
@@ -39,9 +34,29 @@ namespace syosetu_dl {
                 var doc = new HtmlDocument();
                 doc.LoadHtml(await (await client.GetAsync($"{base_url}/{i}/")).Content.ReadAsStringAsync());
                 var pTags = doc.DocumentNode.SelectNodes("//p[starts-with(@id, 'L')]");
-                foreach (var p in pTags) {
-                    str.Append(p.InnerText);
-                    str.Append('\n');
+                foreach (var p in pTags) str.Append(p.InnerText).Append('\n');
+            };
+            return str;
+        }
+        //https://syosetu.org/novel/xxxxx
+        public static async Task<StringBuilder> syosetu_org(string base_url, int i) {
+            StringBuilder str = new StringBuilder();
+            using (HttpClient client = new HttpClient()) {
+                client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0");
+                client.DefaultRequestHeaders.Add("Cookie", "over18=yes");
+                Console.WriteLine($"{base_url}/{i}.html");
+                var doc = new HtmlDocument();
+                doc.LoadHtml(await (await client.GetAsync($"{base_url}/{i}.html")).Content.ReadAsStringAsync());
+                var pTags = doc.DocumentNode.SelectNodes("//p");
+                if (pTags != null) {
+                    var maegaki = doc.DocumentNode.SelectSingleNode("//div[@id='maegaki']");
+                    if (maegaki != null) str.Append(maegaki.InnerText);
+                    var span_fs = doc.DocumentNode.SelectSingleNode("//span[@style=\"font-size:120%\"]");
+                    if (span_fs != null) str.Append(span_fs.InnerText).Append('\n');
+                    var filteredParagraphs = pTags.Where(p => (new Regex("^[0-9]+$")).IsMatch(p.GetAttributeValue("id", "")));
+                    foreach (var node in filteredParagraphs) str.Append(node.InnerText).Append('\n');
+                } else {
+                    throw new Exception("html is empty.");
                 }
             };
             return str;
@@ -63,10 +78,7 @@ namespace syosetu_dl {
                 var doc = new HtmlDocument();
                 doc.LoadHtml(await req.Content.ReadAsStringAsync());
                 var pTags = doc.DocumentNode.SelectNodes("//p[starts-with(@id, 'p')]");
-                for (int idx = 0; idx < pTags.Count; ++idx) {
-                    str.Append(pTags[idx].InnerText);
-                    str.Append('\n');
-                }
+                for (int idx = 0; idx < pTags.Count; ++idx) str.Append(pTags[idx].InnerText).Append('\n');
             }
             return str;
         }
@@ -78,7 +90,7 @@ namespace syosetu_dl {
                 if (req_main) {
                     string pageContent = await (await client.GetAsync($"{base_url}")).Content.ReadAsStringAsync();
                     int fidx = pageContent.IndexOf("総エピソード数：") + 8;
-                    int mpage = (int)Math.Ceiling(int.Parse(pageContent.Substring(fidx, pageContent.IndexOf("話</p>") - fidx).Replace(",", "")) / 100.0f); ;
+                    int mpage = (int)Math.Ceiling(int.Parse(pageContent.Substring(fidx, pageContent.IndexOf("話</p>") - fidx).Replace(",", "")) / 100.0f);
                     List<string> page_str = new List<string> { pageContent };
                     for (int i = 2; i <= mpage; ++i) page_str.Add(await (await client.GetAsync($"{base_url}?p={i}")).Content.ReadAsStringAsync());
                     for (int i = 0; i < page_str.Count; ++i) {
@@ -90,12 +102,9 @@ namespace syosetu_dl {
                     id_collection.Add(laststr);
                     req_main = false;
                 }
-                HttpResponseMessage req = await client.GetAsync(id_collection[idx - 1 < 0 ? 0 : idx - 1]);
                 var doc = new HtmlDocument();
-                doc.LoadHtml(await req.Content.ReadAsStringAsync());
-                str.Append(doc.DocumentNode.SelectSingleNode("//div[@class='episode_title']").InnerText);
-                str.Append('\n');
-                str.Append(doc.DocumentNode.SelectSingleNode("//p[@id='episode_content']").InnerText);
+                doc.LoadHtml(await (await client.GetAsync(id_collection[idx - 1 < 0 ? 0 : idx - 1])).Content.ReadAsStringAsync());
+                str.Append(doc.DocumentNode.SelectSingleNode("//div[@class='episode_title']").InnerText).Append('\n').Append(doc.DocumentNode.SelectSingleNode("//p[@id='episode_content']").InnerText);
             }
             return str;
         }
@@ -139,11 +148,7 @@ namespace syosetu_dl {
                         };
                         Thread.Sleep(100);
                     }
-                    var str_body = js.ExecuteScript("return document.getElementById('novelBody').innerText;");
-                    var str_title = js.ExecuteScript("return document.getElementsByClassName('episode-title')[0].innerText;");
-                    str.Append(str_title.ToString());
-                    str.Append('\n');
-                    str.Append(str_body.ToString());
+                    str.Append(js.ExecuteScript("return document.getElementsByClassName('episode-title')[0].innerText;").ToString()).Append('\n').Append(js.ExecuteScript("return document.getElementById('novelBody').innerText;").ToString());
                 }
             }
             return str;
@@ -152,9 +157,9 @@ namespace syosetu_dl {
         static async Task Main(string[] args) {
             if (args.Length == 0) return;
             string base_url = args[0];
-            int from = int.Parse(args[1]);
             int to = int.Parse(args[2]);
             if (base_url.IndexOf("syosetu.com") != -1) novel_hd = syosetu;
+            if (base_url.IndexOf("syosetu.org") != -1) novel_hd = syosetu_org;
             if (base_url.IndexOf("kakuyomu.jp") != -1) novel_hd = kakuyomu;
             if (base_url.IndexOf("alphapolis.co") != -1) {
                 novel_hd = alphapolis;
@@ -165,7 +170,7 @@ namespace syosetu_dl {
                 to_end = true;
                 to = int.MaxValue;
             }
-            for (int i = from; i <= to; ++i) {
+            for (int i = int.Parse(args[1]); i <= to; ++i) {
                 try {
                     if (novel_hd == null) throw new Exception("Error Type.");
                     string result = (await novel_hd(base_url, i)).ToString();
