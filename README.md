@@ -43,7 +43,7 @@ syosetu-dl https://novel18.syosetu.com/xxxxx 201 538 output
 syosetu-dl https://www.alphapolis.co.jp/novel/xxxxx/yyyyy 1 -1 output 
 ```
 
-平台URL(platforms URL):
+支持的URL(Supported URL):
 ```bash
 https://ncode.syosetu.com/xxxxx
 
