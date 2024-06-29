@@ -34,13 +34,13 @@
 ### 示例(Examples)
 
 ```bash
-syosetu-dl.exe https://novel18.syosetu.com/xxxxx 201 538 output
+syosetu-dl https://novel18.syosetu.com/xxxxx 201 538 output
 ```
 
 或者(Or):
 
 ```bash
-syosetu-dl.exe https://ncode.syosetu.com/yyyyy 1 -1 output 
+syosetu-dl https://ncode.syosetu.com/yyyyy 1 -1 output 
 ```
 
 其他平台(Other platforms):
@@ -57,7 +57,7 @@ https://www.alphapolis.co.jp/novel/xxxxx/yyyyy
 ### 命令格式(CMD Format)
 
 ```bash 
-syosetu-dl.exe base_url from to to_path 
+syosetu-dl base_url from to to_path 
 ```
 
 ---
