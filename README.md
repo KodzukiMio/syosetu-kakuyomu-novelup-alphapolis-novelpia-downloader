@@ -15,7 +15,7 @@
 - **base_url**: 目录URL | *Directory URL*
 - **from**: 开始的章节下标（从1开始，不是URL后面的ID）| *Starting chapter index (starts from 1, not the ID in the URL)*
 - **to**: 结束章节下标 | *Ending chapter index*
-    - 可以填写 `-1`，爬取到最后一章 (*You can set `to` as `-1`, which means downloading to end chapter*)
+    - 填写 `-1`，表示爬取到最后一章 (*You can set `to` as `-1`, which means downloading to end chapter*)
     - 注意：syosetu不支持 `-1` 参数 (*Note: syosetu does not support the parameter `-1`)*
     
 - **to_path**: 保存的文件夹名 | *Name of the folder where it will be saved*
