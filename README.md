@@ -7,7 +7,7 @@
 ## 需要 (Requirements)
 - .Net Framework 8.0
 - Proxy代理（中国大陆地区） *Proxy (for mainland China)*
-- Firefox (alphapolis)
+- Firefox (爬取alphapolis需要火狐浏览器|alphapolis requirement)
 
 ## 使用说明 (Instructions)
 
