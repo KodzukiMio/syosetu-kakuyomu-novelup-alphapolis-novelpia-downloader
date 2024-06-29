@@ -22,10 +22,10 @@
 
 ### 支持的网站(Supported Websites)
 *Supports*:
-* Syosetu
-* Kakuyomu
-* Novelup
-* Alphapolis
+* Syosetu(ミッドナイトノベルズ,ムーンライトノベルズ,ノクターンノベルズ,小説家になろう,ハーメルン,小説を読もう！)
+* Kakuyomu(カクヨム)
+* Novelup(ノベルアップ)
+* Alphapolis(アルファポリス)
 
 > alphapolis：无法爬取付费文章，需要Firefox。
 > 
