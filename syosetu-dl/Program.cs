@@ -3,6 +3,7 @@ using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium;
 using System.Text;
 using System.Text.RegularExpressions;
+using OpenQA.Selenium.Chrome;
 
 namespace syosetu_dl {
     internal class Program {
@@ -153,9 +154,11 @@ namespace syosetu_dl {
             }
             return str;
         }
-        //args:base_url from to to_folder
         static async Task Main(string[] args) {
-            if (args.Length == 0) return;
+            if (args.Length == 0) {
+                Console.WriteLine("https://github.com/KodzukiMio/syosetu-kakuyomu-novelup-alphapolis-downloader\nargs:base_url from to to_folder");
+                return;
+            } 
             string base_url = args[0];
             int to = int.Parse(args[2]);
             if (base_url.IndexOf("syosetu.com") != -1) novel_hd = syosetu;
@@ -166,7 +169,7 @@ namespace syosetu_dl {
                 driver = CreateInstance();
             }
             if (base_url.IndexOf("novelup.plus") != -1) novel_hd = novelup;
-            if (to == -1) {//to填写-1则是全部爬取
+            if (to == -1) {//to填写-1则是爬取到最后一章(不支持syosetu)
                 to_end = true;
                 to = int.MaxValue;
             }
