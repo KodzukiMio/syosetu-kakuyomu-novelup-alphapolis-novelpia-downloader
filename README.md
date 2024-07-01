@@ -71,11 +71,11 @@ syosetul-dl https://novel18.syosetu.com/xxxxx chapters.txt output
 ```bash
 https://ncode.syosetu.com/xxxxx
 
-https://novel18.syosetu.com/
+https://novel18.syosetu.com/xxxxx
 
-https://kakuyomu.jp/
+https://kakuyomu.jp/xxxxx
 
-https://novelup.plus/story/
+https://novelup.plus/story/xxxxx
 
-https://www.alphapolis.co.jp/
+https://www.alphapolis.co.jp/xxxxx
 ```
