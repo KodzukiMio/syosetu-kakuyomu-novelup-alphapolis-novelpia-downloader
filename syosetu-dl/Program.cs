@@ -3,7 +3,6 @@ using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium;
 using System.Text;
 using System.Text.RegularExpressions;
-using OpenQA.Selenium.Chrome;
 
 namespace syosetu_dl {
     internal class Program {
@@ -13,17 +12,28 @@ namespace syosetu_dl {
         public static bool req_main = true;
         public static bool to_end = false;
         public static IWebDriver? driver;
-        public static void WriteText(ref string filePath, ref string content) {
-            if (!File.Exists(filePath)) {
-                string? directoryPath = Path.GetDirectoryName(filePath);
-                if (directoryPath == null) throw new Exception("GetDirectoryName error");
-                if (!Directory.Exists(directoryPath)) Directory.CreateDirectory(directoryPath);
-                using (FileStream fs = File.Create(filePath)) {
-                    byte[] contents = new UTF8Encoding(true).GetBytes(content);
-                    fs.Write(contents, 0, contents.Length);
-                }
-                Console.WriteLine($"{filePath}:已写入.");
-            } else Console.WriteLine("文件已存在.");
+        public static void WriteText(ref string filePath, ref string content, bool ignore_noexist = true) {
+            try {
+                if (!(File.Exists(filePath) && ignore_noexist)) {
+                    string? directoryPath = Path.GetDirectoryName(filePath);
+                    if (directoryPath == null) throw new Exception("GetDirectoryName error");
+                    if (!Directory.Exists(directoryPath)) Directory.CreateDirectory(directoryPath);
+                    if (ignore_noexist) {
+                        using (FileStream fs = File.Create(filePath)) {
+                            byte[] contents = new UTF8Encoding(true).GetBytes(content);
+                            fs.Write(contents, 0, contents.Length);
+                        }
+                    } else {
+                        using (FileStream fs = File.Open(filePath, FileMode.Truncate)) {
+                            byte[] contents = new UTF8Encoding(true).GetBytes(content);
+                            fs.Write(contents, 0, contents.Length);
+                        }
+                    }
+                    Console.WriteLine($"File {filePath} written successfully.");
+                } else Console.WriteLine($"File {filePath} exist.");
+            } catch (Exception ex) {
+                Console.WriteLine($"File error.{filePath},{ignore_noexist},{ex}");
+            }
         }
         //https://ncode.syosetu.com/xxxxx
         //https://novel18.syosetu.com/xxxxx
@@ -130,6 +140,7 @@ namespace syosetu_dl {
             using (HttpClient client = new HttpClient()) {
                 client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0");
                 if (req_main) {
+                    driver = CreateInstance();
                     var doc = new HtmlDocument();
                     doc.LoadHtml(await (await client.GetAsync($"{base_url}")).Content.ReadAsStringAsync());
                     var pTags = doc.DocumentNode.SelectNodes("//div[@class='episode ']");
@@ -149,7 +160,18 @@ namespace syosetu_dl {
                         };
                         Thread.Sleep(100);
                     }
-                    str.Append(js.ExecuteScript("return document.getElementsByClassName('episode-title')[0].innerText;").ToString()).Append('\n').Append(js.ExecuteScript("return document.getElementById('novelBody').innerText;").ToString());
+                    str.Append(js.ExecuteScript("return document.getElementsByClassName('episode-title')[0].innerText;").ToString()).Append('\n');
+                    object? ifs;
+                retry:
+                    ifs = js.ExecuteScript("return document.getElementById('novelBody').innerText;");
+                    if (ifs == null) {
+                        Console.WriteLine($"Retry get Chapter-{i}.");
+                        Thread.Sleep(1000);
+                        goto retry;
+                    }
+                    string? body = ifs.ToString();
+                    if (body == null || body.Length == 0) goto retry;
+                    str.Append(body);
                 }
             }
             return str;
@@ -158,24 +180,40 @@ namespace syosetu_dl {
             if (args.Length == 0) {
                 Console.WriteLine("https://github.com/KodzukiMio/syosetu-kakuyomu-novelup-alphapolis-downloader\nargs:base_url from to to_folder");
                 return;
-            } 
+            }
             string base_url = args[0];
-            int to = int.Parse(args[2]);
             if (base_url.IndexOf("syosetu.com") != -1) novel_hd = syosetu;
             if (base_url.IndexOf("syosetu.org") != -1) novel_hd = syosetu_org;
             if (base_url.IndexOf("kakuyomu.jp") != -1) novel_hd = kakuyomu;
-            if (base_url.IndexOf("alphapolis.co") != -1) {
-                novel_hd = alphapolis;
-                driver = CreateInstance();
-            }
+            if (base_url.IndexOf("alphapolis.co") != -1) novel_hd = alphapolis;
             if (base_url.IndexOf("novelup.plus") != -1) novel_hd = novelup;
+            if (novel_hd == null) throw new Exception("Error Type.");
+            if (args.Length == 3) {
+                if (File.Exists(args[1])) {
+                    string[] id_list = File.ReadAllText(args[1]).Split(',');
+                    if (id_list.Length > 0) {
+                        foreach (string id in id_list) {
+                            try {
+                                int idx = int.Parse(id);
+                                string result = (await novel_hd(base_url, idx)).ToString();
+                                string file = $"{args[2]}\\Chapter-{idx}.txt";
+                                WriteText(ref file, ref result, false);
+                            } catch (Exception ex) {
+                                Console.WriteLine(ex.ToString());
+                                goto end;
+                            }
+                        }
+                    }
+                } else Console.WriteLine($"File {args[1]} not exist.");
+                goto end;
+            }
+            int to = int.Parse(args[2]);
             if (to == -1) {//to填写-1则是爬取到最后一章(不支持syosetu)
                 to_end = true;
                 to = int.MaxValue;
             }
             for (int i = int.Parse(args[1]); i <= to; ++i) {
                 try {
-                    if (novel_hd == null) throw new Exception("Error Type.");
                     string result = (await novel_hd(base_url, i)).ToString();
                     if (to_end) {
                         to = id_collection.Count;
@@ -184,12 +222,14 @@ namespace syosetu_dl {
                     string file = $"{args[3]}\\Chapter-{i}.txt";
                     WriteText(ref file, ref result);
                 } catch (Exception e) {
-                    Console.WriteLine(e.ToString(), "连接超时或ip请求速率达到上限,自动等待1 min后再次发送请求.");
+                    Console.WriteLine(e.ToString());
+                    Console.WriteLine("Connection timed out or IP request rate limit reached. Automatically waiting for 1 minute before retrying the request.");
                     Thread.Sleep(60000);
                     i--;
                     continue;
                 }
             }
+        end:
             if (driver != null) driver.Quit();
         }
     }
