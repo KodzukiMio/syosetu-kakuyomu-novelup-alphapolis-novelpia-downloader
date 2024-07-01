@@ -98,14 +98,17 @@ https://novelup.plus/story/xxxxx
 https://www.alphapolis.co.jp/novel/xxxxx/yyyyy
 ```
 未来的更新计划: 
+0. 实现异步同时下载多个小说章节
 1. 支持syosetu网站的-1参数.
 2. 支持小说自动更新.
 
 Future Update Plan:
+0. Implement asynchronous simultaneous download of multiple novel chapters
 1. Support for the -1 parameter on the syosetu website.
 2. Support for automatic novel updates.
 
 将来の更新計画:
+0. 複数の小説章を非同期で同時にダウンロードする実装
 1. syosetuサイトの-1パラメータをサポート.
 2. 小説の自動更新をサポート.
 
