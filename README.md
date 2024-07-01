@@ -97,7 +97,24 @@ https://novelup.plus/story/xxxxx
 
 https://www.alphapolis.co.jp/novel/xxxxx/yyyyy
 ```
-未来的更新计划: 1. 支持syosetu网站的-1参数. 2. 支持小说自动更新. 3. 图形化页面. 4. 搜索功能. 5. AI自动翻译小说
-Future Update Plan: 1. Support for the -1 parameter on the syosetu website. 2. Support for automatic novel updates. 3. Graphical interface. 4. Search functionality. 5. AI-powered automatic novel translation
-将来の更新計画: 1. syosetuサイトの-1パラメータをサポート. 2. 小説の自動更新をサポート. 3. グラフィカルなページ. 4. 検索機能. 5. AIによる自動小説翻訳
+未来的更新计划: 
+1. 支持syosetu网站的-1参数.
+2. 支持小说自动更新.
+3. 图形化页面.
+4. 搜索功能.
+5. AI自动翻译小说
+
+Future Update Plan:
+1. Support for the -1 parameter on the syosetu website.
+2. Support for automatic novel updates.
+3. Graphical interface.
+4. Search functionality.
+5. AI-powered automatic novel translation
+
+将来の更新計画:
+1. syosetuサイトの-1パラメータをサポート.
+2. 小説の自動更新をサポート.
+3. グラフィカルなページ.
+4. 検索機能.
+5. AIによる自動小説翻訳
 
