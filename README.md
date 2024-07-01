@@ -15,8 +15,8 @@
 - **base_url**: 目录URL | *Directory URL* | ディレクトリURL
 - **from**: 开始章节的下标（从1开始，不是URL后面的ID）| *Starting chapter index (starts from 1, not the ID in the URL)* | 開始章インデックス（1から開始、URL後ろのIDではない）
 - **to**: 结束章节的下标 | *Ending chapter index* | 終了章インデックス 
-    - 填写 `-1`，表示爬取到最后一章 (*You can set `to` as `-1`, which means downloading to end chapter*) (*`to`に `−１` を設定すると最後までダウンロードします*)
-    - 注意：syosetu不支持 `−１` 参数 (*Note: syosetu does not support the parameter `−１`) (*注意：syosetuはパラメータ「−１」をサポートしていません*)
+    - 填写 `-1`，表示爬取到最后一章 (*You can set `to` as `-1`, which means downloading to end chapter*) (*`to`に `-1` を設定すると最後までダウンロードします*)
+    - 注意：syosetu不支持 `-1` 参数 (*Note: syosetu does not support the parameter `-1`) (*注意：syosetuはパラメータ「−１」をサポートしていません*)
 
 ### 支持的网站(Supported Websites)
 Supports:
