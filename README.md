@@ -17,6 +17,7 @@
 - **to**: 结束章节的下标 | *Ending chapter index* | 終了章インデックス 
     - 填写 `-1`，表示爬取到最后一章 (*You can set `to` as `-1`, which means downloading to end chapter*) (*`to`に `-1` を設定すると最後までダウンロードします*)
     - 注意：syosetu不支持 `-1` 参数 (*Note: syosetu does not support the parameter `-1`) (*注意：syosetuはパラメータ「−１」をサポートしていません*)
+- **to_path**: (保存的文件夹名 | name of the folder where it will be saved)
 
 ### 支持的网站(Supported Websites)
 Supports:
