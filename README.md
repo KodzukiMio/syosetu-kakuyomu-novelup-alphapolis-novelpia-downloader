@@ -42,8 +42,6 @@ syosetul-dl base_url from to to_path
 syosetu-dl https://novel18.syosetu.com/xxxxx 201 538 output
 ```
 
-或者/Or/または:
-
 ```bash
 syosetu-dl https://www.alphapolis.co.jp/novel/xxxxx/yyyyy 1 -1 output 
 ```
