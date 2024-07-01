@@ -73,9 +73,11 @@ https://ncode.syosetu.com/xxxxx
 
 https://novel18.syosetu.com/xxxxx
 
-https://kakuyomu.jp/xxxxx
+https://syosetu.org/novel/xxxxx 
 
-https://novelup.plus/story/xxxxx
+https://kakuyomu.jp/works/xxxxx 
 
-https://www.alphapolis.co.jp/xxxxx
+https://novelup.plus/story/xxxxx 
+
+https://www.alphapolis.co.jp/novel/xxxxx/yyyyy  
 ```
