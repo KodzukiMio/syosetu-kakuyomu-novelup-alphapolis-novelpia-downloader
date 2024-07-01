@@ -18,7 +18,7 @@ namespace syosetu_dl {
                     string? directoryPath = Path.GetDirectoryName(filePath);
                     if (directoryPath == null) throw new Exception("GetDirectoryName error");
                     if (!Directory.Exists(directoryPath)) Directory.CreateDirectory(directoryPath);
-                    if (ignore_noexist) {
+                    if (ignore_noexist || !File.Exists(filePath)) {
                         using (FileStream fs = File.Create(filePath)) {
                             byte[] contents = new UTF8Encoding(true).GetBytes(content);
                             fs.Write(contents, 0, contents.Length);
