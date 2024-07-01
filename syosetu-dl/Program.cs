@@ -134,7 +134,7 @@ namespace syosetu_dl {
             return driver;
         }
         //https://www.alphapolis.co.jp/novel/xxxxx/yyyyy
-        //无法爬取付费文章,需要Firefox浏览器
+        //Unable to crawl paid articles, requires Firefox browser
         public static async Task<StringBuilder> alphapolis(string base_url, int i) {
             StringBuilder str = new StringBuilder();
             using (HttpClient client = new HttpClient()) {
@@ -148,7 +148,7 @@ namespace syosetu_dl {
                     req_main = false;
                 }
                 string url = id_collection[i - 1 < 0 ? 0 : i - 1];
-                if (driver != null) {//绕过captcha验证,绕过动态js的token验证
+                if (driver != null) {//Bypass captcha verification, bypass dynamic JS token verification
                     driver.Navigate().GoToUrl(url);
                     IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
                     while (true) {
@@ -208,7 +208,7 @@ namespace syosetu_dl {
                 goto end;
             }
             int to = int.Parse(args[2]);
-            if (to == -1) {//to填写-1则是爬取到最后一章(不支持syosetu)
+            if (to == -1) {//Enter -1 to crawl until the last chapter (not supported for Syosetu)
                 to_end = true;
                 to = int.MaxValue;
             }
