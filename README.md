@@ -18,7 +18,6 @@
     - 填写 `-1`，表示爬取到最后一章 (*You can set `to` as `-1`, which means downloading to end chapter*) (*`to`に `−１` を設定すると最後までダウンロードします*)
     - 注意：syosetu不支持 `−１` 参数 (*Note: syosetu does not support the parameter `−１`) (*注意：syosetuはパラメータ「−１」をサポートしていません*)
 
-    
 ### 支持的网站(Supported Websites)
 Supports:
 対応ウェブサイト：
@@ -46,23 +45,37 @@ IMPORTANT(重要): URL 是目录页面的地址,结尾不要带'/'字符.
 (The directory URL is missing the trailing '/' character.)   
 (URL はディレクトリページアドレスであり、末尾に '/' キャラクタを含めないでください。)
 
+#### 从文件读取待下载的文章(Read chapters to download from file)/ファイルからダウンロードするチャプターを読み込む:
+你可以通过提供一个包含章节索引列表的文件来指定要下载哪些特定章节，每个索引用逗号分隔。例如：
+(*You can specify specific chapters to download by providing a file containing a list of chapter indices separated by commas. For example:*):
+(*特定のチャプターインデックス一覧がコンマ区切りで記載されたファイルを提供することで、どれらか特定なチャプターのみダウンロードできます。例えば:*):
+```textfile.txt:
+79,104,180,193,119,146,276,186,217,80,112,190,202,213,234,205,256,54,284...
+```
+
+命令格式(CMD Format)/コマンド形式:
+
+```bash 
+syosetul-dl base_url file_path to_path 
+```
+
+例如，例如，如果你的文本文件路径为 "chapters.txt"，并且你想将内容保存到 "output" 文件夹中，你可以使用以下命令：
+(*For instance if your text file path is "chapters.txt" and you want to save content into an "output" folder you could use following command:*):
+(*例えばテキストファイルパスが「chapters.txt」で、「output」フォルダーに保存したい場合、次のコマンドをご利用いただけます*:):
+
+```bash 
+syosetul-dl https://novel18.syosetu.com/xxxxx chapters.txt output 
+```
+
 ### 支持的URL(Supported URLs)/対応するURL:
 ```bash
 https://ncode.syosetu.com/xxxxx
 
-https://novel18.syosetu.com/xxxxx
+https://novel18.syosetu.com/
 
-https://syosetu.org/novel/xxxxx 
-
-https://kakuyomu.jp/works/xxxxx 
+https://kakuyomu.jp/
 
 https://novelup.plus/story/
 
 https://www.alphapolis.co.jp/
-```
-
-### 命令格式(CMD Format)/コマンド形式:
-
-```bash 
-syosetul-dl base_url from to to_path 
 ```
