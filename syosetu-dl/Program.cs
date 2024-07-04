@@ -3,16 +3,41 @@ using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium;
 using System.Text;
 using System.Text.RegularExpressions;
+using static syosetu_dl.Program;
 
 namespace syosetu_dl {
     internal class Program {
+        public enum ParamType {
+            SaveTitleTargetFile,
+            ForceWrite,
+            SaveImmediately,
+        }
         public delegate Task<StringBuilder> NovelHandle(string base_url, int i);
         public static NovelHandle? novel_hd = null;
         public static List<string> id_collection = new List<string>();
         public static bool req_main = true;
         public static bool to_end = false;
         public static IWebDriver? driver;
-        public static void WriteText(ref string filePath, ref string content, bool ignore_noexist = true) {
+        public static Dictionary<string, ParamType> param2id = new Dictionary<string, ParamType> {
+            { "-sttf",ParamType.SaveTitleTargetFile},
+            {"-fw",ParamType.ForceWrite},
+            { "-si",ParamType.SaveImmediately},
+        };
+        public static bool b_sttf = false;
+        public static bool b_fw = true;
+        public static bool b_si = false;
+        public static string? s_sttf;
+        public static StringBuilder? sttf;
+        public static void SaveImme() {
+            if (b_sttf && sttf != null) {
+                string sttfbd = sttf.ToString();
+                if (s_sttf != null) WriteText(ref s_sttf, ref sttfbd, b_fw);
+            }
+        }
+        public static void AppendTitle(string? title, int idx) {
+            if (sttf != null && title != null) sttf.Append($"Chapter-{idx}:").Append(title).Append('\n');
+        }
+        public static void WriteText(ref string filePath, ref string content, bool ignore_noexist) {
             try {
                 if (!(File.Exists(filePath) && ignore_noexist)) {
                     string? directoryPath = Path.GetDirectoryName(filePath);
@@ -43,9 +68,21 @@ namespace syosetu_dl {
                 client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0");
                 client.DefaultRequestHeaders.Add("Cookie", "over18=yes");
                 var doc = new HtmlDocument();
-                doc.LoadHtml(await (await client.GetAsync($"{base_url}/{i}/")).Content.ReadAsStringAsync());
+                string url = $"{base_url}/{i}/";
+            single_page:
+                doc.LoadHtml(await (await client.GetAsync(url)).Content.ReadAsStringAsync());
+                var title = doc.DocumentNode.SelectSingleNode("//p[@class='novel_subtitle']");
+                if (title != null) {
+                    AppendTitle(title.InnerText, i);
+                    str.Append(title.InnerText).Append('\n');
+                }
                 var pTags = doc.DocumentNode.SelectNodes("//p[starts-with(@id, 'L')]");
-                foreach (var p in pTags) str.Append(p.InnerText).Append('\n');
+                if (pTags != null) {
+                    foreach (var p in pTags) str.Append(p.InnerText).Append('\n');
+                } else {
+                    url = $"{base_url}/";
+                    goto single_page;
+                }
             };
             return str;
         }
@@ -55,15 +92,17 @@ namespace syosetu_dl {
             using (HttpClient client = new HttpClient()) {
                 client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0");
                 client.DefaultRequestHeaders.Add("Cookie", "over18=yes");
-                Console.WriteLine($"{base_url}/{i}.html");
                 var doc = new HtmlDocument();
                 doc.LoadHtml(await (await client.GetAsync($"{base_url}/{i}.html")).Content.ReadAsStringAsync());
                 var pTags = doc.DocumentNode.SelectNodes("//p");
                 if (pTags != null) {
                     var maegaki = doc.DocumentNode.SelectSingleNode("//div[@id='maegaki']");
                     if (maegaki != null) str.Append(maegaki.InnerText);
-                    var span_fs = doc.DocumentNode.SelectSingleNode("//span[@style=\"font-size:120%\"]");
-                    if (span_fs != null) str.Append(span_fs.InnerText).Append('\n');
+                    var span_fs = doc.DocumentNode.SelectNodes("//span[@style='font-size:120%']");
+                    if (span_fs != null) {
+                        str.Append('\n').Append(span_fs[1].InnerText).Append('\n');
+                        AppendTitle(span_fs[1].InnerText, i);
+                    }
                     var filteredParagraphs = pTags.Where(p => (new Regex("^[0-9]+$")).IsMatch(p.GetAttributeValue("id", "")));
                     foreach (var node in filteredParagraphs) str.Append(node.InnerText).Append('\n');
                 } else {
@@ -88,6 +127,11 @@ namespace syosetu_dl {
                 HttpResponseMessage req = await client.GetAsync($"{base_url}/episodes/{id_collection[(i - 1) < 0 ? 0 : (i - 1)]}");
                 var doc = new HtmlDocument();
                 doc.LoadHtml(await req.Content.ReadAsStringAsync());
+                var title = doc.DocumentNode.SelectSingleNode("//p[@class='widget-episodeTitle js-vertical-composition-item']");
+                if (title != null) {
+                    str.Append(title.InnerText).Append("\n");
+                    AppendTitle(title.InnerText, i);
+                }
                 var pTags = doc.DocumentNode.SelectNodes("//p[starts-with(@id, 'p')]");
                 for (int idx = 0; idx < pTags.Count; ++idx) str.Append(pTags[idx].InnerText).Append('\n');
             }
@@ -115,7 +159,12 @@ namespace syosetu_dl {
                 }
                 var doc = new HtmlDocument();
                 doc.LoadHtml(await (await client.GetAsync(id_collection[idx - 1 < 0 ? 0 : idx - 1])).Content.ReadAsStringAsync());
-                str.Append(doc.DocumentNode.SelectSingleNode("//div[@class='episode_title']").InnerText).Append('\n').Append(doc.DocumentNode.SelectSingleNode("//p[@id='episode_content']").InnerText);
+                var title = doc.DocumentNode.SelectSingleNode("//div[@class='episode_title']");
+                if (title != null) {
+                    str.Append(title.InnerText).Append('\n');
+                    AppendTitle(title.InnerText, idx);
+                }
+                str.Append(doc.DocumentNode.SelectSingleNode("//p[@id='episode_content']").InnerText);
             }
             return str;
         }
@@ -160,7 +209,12 @@ namespace syosetu_dl {
                         };
                         Thread.Sleep(100);
                     }
-                    str.Append(js.ExecuteScript("return document.getElementsByClassName('episode-title')[0].innerText;").ToString()).Append('\n');
+                    var title = js.ExecuteScript("return document.getElementsByClassName('episode-title')[0].innerText;");
+                    if (title != null) {
+                        str.Append(title.ToString()).Append('\n');
+                        AppendTitle(title.ToString(), i);
+                    }
+
                     object? ifs;
                 retry:
                     ifs = js.ExecuteScript("return document.getElementById('novelBody').innerText;");
@@ -176,9 +230,29 @@ namespace syosetu_dl {
             }
             return str;
         }
+        static void parse_param(string[] args, int bidx) {
+            for (int i = bidx; i < args.Length; ++i) {
+                ParamType tmp = param2id[args[i]];
+                switch (tmp) {
+                    case ParamType.SaveTitleTargetFile:
+                        b_sttf = true;
+                        ++i;
+                        s_sttf = $"{args[bidx - 1]}\\{args[i]}";
+                        sttf = new StringBuilder();
+                        break;
+                    case ParamType.ForceWrite:
+                        b_fw = false;
+                        break;
+                    case ParamType.SaveImmediately:
+                        b_fw = false;
+                        b_si = true;
+                        break;
+                }
+            }
+        }
         static async Task Main(string[] args) {
             if (args.Length == 0) {
-                Console.WriteLine("https://github.com/KodzukiMio/syosetu-kakuyomu-novelup-alphapolis-downloader\nargs:base_url from to to_folder");
+                Console.WriteLine("https://github.com/KodzukiMio/syosetu-kakuyomu-novelup-alphapolis-downloader\nargs:\nbase_url from to to_folder ...\nbase_url file_path to_path ...");
                 return;
             }
             string base_url = args[0];
@@ -188,6 +262,10 @@ namespace syosetu_dl {
             if (base_url.IndexOf("alphapolis.co") != -1) novel_hd = alphapolis;
             if (base_url.IndexOf("novelup.plus") != -1) novel_hd = novelup;
             if (novel_hd == null) throw new Exception("Error Type.");
+            if (args[3][0] == '-' || args.Length > 4) {//输出的文件目录开头不要有'-'
+                if (args[3][0] == '-') parse_param(args, 3);
+                else parse_param(args, 4);
+            }
             if (args.Length == 3) {
                 if (File.Exists(args[1])) {
                     string[] id_list = File.ReadAllText(args[1]).Split(',');
@@ -197,7 +275,8 @@ namespace syosetu_dl {
                                 int idx = int.Parse(id);
                                 string result = (await novel_hd(base_url, idx)).ToString();
                                 string file = $"{args[2]}\\Chapter-{idx}.txt";
-                                WriteText(ref file, ref result, false);
+                                WriteText(ref file, ref result, b_fw);
+                                if (b_si) SaveImme();
                             } catch (Exception ex) {
                                 Console.WriteLine(ex.ToString());
                                 goto end;
@@ -220,10 +299,11 @@ namespace syosetu_dl {
                         to_end = false;
                     }
                     string file = $"{args[3]}\\Chapter-{i}.txt";
-                    WriteText(ref file, ref result);
+                    WriteText(ref file, ref result, b_fw);
+                    if (b_si) SaveImme();
                 } catch (Exception e) {
                     Console.WriteLine(e.ToString());
-                    Console.WriteLine("Connection timed out or IP request rate limit reached. Automatically waiting for 1 minute before retrying the request.");
+                    Console.WriteLine("\n\nConnection timed out or IP request rate limit reached. Automatically waiting for 1 minute before retrying the request.\n某些网站会限制IP请求速率,1 min后程序会自动继续请求下一章节.");
                     Thread.Sleep(60000);
                     i--;
                     continue;
@@ -231,6 +311,7 @@ namespace syosetu_dl {
             }
         end:
             if (driver != null) driver.Quit();
+            if (!b_si) SaveImme();
         }
     }
 }
