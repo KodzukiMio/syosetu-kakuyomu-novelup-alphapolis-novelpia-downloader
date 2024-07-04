@@ -44,12 +44,23 @@
 - **to_path**: 保存的文件夹名  
   *Name of the folder where it will be saved*  
   保存フォルダ名
-
+  
+  附加参数(other params):
+- **-sttf file_path**: (可选) 将下载的章节标题保存到指定文件  
+  *Optional: Saves downloaded chapter titles to a specified file*  
+  *(オプション) ダウンロードした章のタイトルを指定されたファイルに保存します*
+- **-fw**: (可选) 如果标题文件已存在，强制写入  
+  *Optional: Forces writing to the title file even if it already exists*  
+  *(オプション) タイトルファイルが既に存在する場合でも、強制的に書き込みます*
+- **-si**: (可选) 立即写入标题文件，即使下载任务未完成  
+  *Optional: Writes to the title file immediately, even if the download task is not completed*  
+  *(オプション) ダウンロードタスクが完了していなくても、すぐにタイトルファイルに書き込みます*
+  
 ### 示例 (Examples) / 例
 
 命令格式 (CMD Format) / コマンド形式:
 ```bash 
-syosetul-dl base_url from to to_path 
+syosetul-dl base_url from to to_path ...
 ```
 
 ```bash
@@ -59,6 +70,15 @@ syosetu-dl https://novel18.syosetu.com/xxxxx 201 538 output
 ```bash
 syosetu-dl https://www.alphapolis.co.jp/novel/xxxxx/yyyyy 1 -1 output 
 ```
+
+```bash
+syosetu-dl https://kakuyomu.jp/works/xxxxx 1 -1 output -fw -sttf titles.txt -si
+```
+
+```bash
+syosetu-dl https://novelup.plus/story/xxxxx 10 -1 output -sttf titles.txt -fw
+```
+
 > 重要 (IMPORTANT): URL 是目录页面的地址,结尾不要带'/'字符。  
 > *The directory URL is missing the trailing '/' character.*  
 > *URL はディレクトリページアドレスであり、末尾に '/' キャラクタを含めないでください。*
