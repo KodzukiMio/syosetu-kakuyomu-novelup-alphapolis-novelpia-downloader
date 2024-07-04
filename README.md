@@ -45,15 +45,16 @@
   *Name of the folder where it will be saved*  
   保存フォルダ名
   
-  附加参数(other params):
-- **-fw**: (可选) 如果文件已存在，强制写入.
-  *Optional: Forces writing to the file even if it already exists*  
+  可选附加参数(optional other params):
+  
+- **-fw** -> ForceWrite: 如果文件已存在，强制写入.
+  *Forces writing to the file even if it already exists*  
   *(オプション) ファイルが既に存在する場合でも、強制的に書き込みます*
-- **-sttf file_path**: (可选) 将下载的章节标题保存到指定文件  
-  *Optional: Saves downloaded chapter titles to a specified file*  
+- **-sttf file_path** -> SaveTitleTargetFile: 将下载的章节标题保存到指定文件  
+  *Saves downloaded chapter titles to a specified file*  
   *(オプション) ダウンロードした章のタイトルを指定されたファイルに保存します*
-- **-si**: (可选) 立即写入标题文件，即使下载任务未完成  
-  *Optional: Writes to the title file immediately, even if the download task is not completed*  
+- **-si** -> SaveImmediately: 立即写入标题文件，即使下载任务未完成  
+  *Writes to the title file immediately, even if the download task is not completed*  
   *(オプション) ダウンロードタスクが完了していなくても、すぐにタイトルファイルに書き込みます*
   
 ### 示例 (Examples) / 例
