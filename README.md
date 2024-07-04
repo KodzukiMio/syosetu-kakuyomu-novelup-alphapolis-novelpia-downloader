@@ -94,7 +94,11 @@ syosetu-dl https://novelup.plus/story/xxxxx 10 -1 output -sttf titles.txt -fw
 
 命令格式 (CMD Format) / コマンド形式:
 ```bash 
-syosetul-dl base_url file_path to_path 
+syosetul-dl base_url file_path to_path ...
+```
+
+```bash
+syosetu-dl https://novelup.plus/story/xxxxx chapters.txt output -sttf titles.txt -fw
 ```
 
 例如，如果你的文本文件路径为 "chapters.txt"，并且你想将内容保存到 "output" 文件夹中，你可以使用以下命令：  
