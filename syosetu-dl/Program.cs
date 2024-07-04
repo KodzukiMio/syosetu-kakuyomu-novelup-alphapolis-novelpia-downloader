@@ -262,15 +262,18 @@ namespace syosetu_dl {
             if (base_url.IndexOf("alphapolis.co") != -1) novel_hd = alphapolis;
             if (base_url.IndexOf("novelup.plus") != -1) novel_hd = novelup;
             if (novel_hd == null) throw new Exception("Error Type.");
-            if (args[3][0] == '-' || args.Length > 4) {//输出的文件目录开头不要有'-'
-                if (args[3][0] == '-') parse_param(args, 3);
-                else parse_param(args, 4);
+            if (args.Length > 3) {
+                if (args[3][0] == '-' || args.Length > 4) {//输出的文件目录开头不要有'-'
+                    if (args[3][0] == '-') parse_param(args, 3);
+                    else parse_param(args, 4);
+                }
             }
-            if (args.Length == 3) {
+            if (args.Length == 3 || (args.Length > 3 && (args[3][0] == '-'))) {
                 if (File.Exists(args[1])) {
                     string[] id_list = File.ReadAllText(args[1]).Split(',');
                     if (id_list.Length > 0) {
                         foreach (string id in id_list) {
+                            retry:
                             try {
                                 int idx = int.Parse(id);
                                 string result = (await novel_hd(base_url, idx)).ToString();
@@ -279,7 +282,9 @@ namespace syosetu_dl {
                                 if (b_si) SaveImme();
                             } catch (Exception ex) {
                                 Console.WriteLine(ex.ToString());
-                                goto end;
+                                Console.WriteLine("\n\nConnection timed out or IP request rate limit reached. Automatically waiting for 1 minute before retrying the request.\n某些网站会限制IP请求速率,1 min后程序会自动继续请求下一章节.");
+                                Thread.Sleep(60000);
+                                goto retry;
                             }
                         }
                     }
