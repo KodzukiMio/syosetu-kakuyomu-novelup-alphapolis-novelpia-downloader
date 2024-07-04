@@ -50,7 +50,7 @@
 - **-fw** -> ForceWrite: 如果文件已存在，强制写入.
   *Forces writing to the file even if it already exists*  
   *(オプション) ファイルが既に存在する場合でも、強制的に書き込みます*
-- **-sttf file_path** -> SaveTitleTargetFile: 将下载的章节标题保存到指定文件  
+- **-sttf file_name** -> SaveTitleTargetFile: 将下载的章节标题保存到指定文件  
   *Saves downloaded chapter titles to a specified file*  
   *(オプション) ダウンロードした章のタイトルを指定されたファイルに保存します*
 - **-si** -> SaveImmediately: 立即写入标题文件，即使下载任务未完成  
