@@ -1,0 +1,17 @@
+{
+  "manifest_version": 3,
+  "name": "kakuyomu blacklist block",
+  "description": "author: https://github.com/KodzukiMio",
+  "version": "1.0",
+  "action": {
+    "default_popup": "main.html",
+    "default_icon": "favicon.png"
+  },
+  "permissions": ["storage"],
+  "content_scripts": [
+    {
+      "js": ["item.js"],
+      "matches": ["https://kakuyomu.jp/search*"]
+    }
+  ]
+}
