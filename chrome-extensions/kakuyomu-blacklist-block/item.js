@@ -24,7 +24,7 @@ __kkym__plugins__.update = async function () {
         });
         if (!response.ok) throw new Error('Network response was not ok');
         const result = await response.text();
-        data = __kkym__plugins__.ok(result);
+        __kkym__plugins__.ok(result);
     } catch (error) {
         console.error('There has been a problem with fetch:', error);
     }
