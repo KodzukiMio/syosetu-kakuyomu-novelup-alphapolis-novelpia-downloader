@@ -16,9 +16,8 @@ __kkym__plugins__.get = function (key = 'gld_kkym') {
         });
     });
 }
-__kkym__plugins__.run = async function () {
-    let data = await __kkym__plugins__.get();
-    if (!data) try {
+__kkym__plugins__.update = async function () {
+    try {
         const response = await fetch('https://kakuyomu.jp/settings/blocklist', {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
@@ -29,6 +28,11 @@ __kkym__plugins__.run = async function () {
     } catch (error) {
         console.error('There has been a problem with fetch:', error);
     }
+}
+__kkym__plugins__.run = async function () {
+    let data = await __kkym__plugins__.get();
+    if (!data) await this.update();
+    else this.update();
     this.handle(data, await this.get('gld_kkym_col'));
 }
 __kkym__plugins__.handle = function (data, type) {
