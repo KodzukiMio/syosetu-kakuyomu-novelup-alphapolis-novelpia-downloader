@@ -123,11 +123,6 @@ https://novelup.plus/story/xxxxx
 https://www.alphapolis.co.jp/novel/xxxxx/yyyyy
 ```
 
-### Chrome Extension
-kakuyomu chrome拓展:屏蔽搜索中的黑名单用户,详细请看chrome-extensions/kakuyomu-blacklist-block的readme.txt
-Kakuyomu Chrome Extension: Block blacklisted users from search results. For details, see chrome-extensions/kakuyomu-blacklist-block/readme.txt
-カクヨム Chrome 拡張機能: 検索結果からブラックリストユーザーを非表示にします。詳細は chrome-extensions/kakuyomu-blacklist-block/readme.txt を参照してください。
-
 未来的更新计划: 
 
 0. 实现异步同时下载多个小说章节
