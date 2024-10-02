@@ -30,7 +30,7 @@ __kkym__plugins__.mark = async function () {
         let button = document.createElement('button');
         button.textContent = "visiable";
         if (vis) {
-            let type = vis[node.innerText.substring(0, node.innerText.lastIndexOf('@'))];
+            let type = vis[node.innerText.substring(0, node.innerText.lastIndexOf('@') - 1)];
             node.__kkym_type = type ? type : "green";
             if (node.__kkym_type == "green") button.style.color = "rgb(0,255,0)";
             else button.style.color = "rgb(255,0,0)";
