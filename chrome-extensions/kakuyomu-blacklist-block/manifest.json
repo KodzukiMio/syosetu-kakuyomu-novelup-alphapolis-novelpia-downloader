@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "kakuyomu blacklist block",
+  "name": "kakuyomu blacklist and following",
   "description": "author: https://github.com/KodzukiMio",
   "version": "1.0",
   "action": {
@@ -12,6 +12,10 @@
     {
       "js": ["item.js"],
       "matches": ["https://kakuyomu.jp/search*"]
+    },
+    {
+      "js": ["mark.js"],
+      "matches": ["https://kakuyomu.jp/users/*/following_users"]
     }
   ]
 }
