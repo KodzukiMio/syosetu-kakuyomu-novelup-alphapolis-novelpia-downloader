@@ -46,7 +46,7 @@ __kkym__plugins__.mark = async function () {
                 node.__kkym_type = 'green';
                 button.style.color = "rgb(0,255,0)";
             }
-            __kkym__plugins__.mark_update(data);
+            this.mark_update(data);
         });
         node.parentNode.append(button);
     });

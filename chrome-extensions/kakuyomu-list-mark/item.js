@@ -18,14 +18,14 @@ __kkym__plugins__.get = function (key = 'gld_kkym') {
 }
 __kkym__plugins__.update = async function () {
     try {
-        __kkym__plugins__.ok(await this.getfrom_url('https://kakuyomu.jp/settings/blocklist'));
+        this.ok(await this.getfrom_url('https://kakuyomu.jp/settings/blocklist'));
     } catch (error) {
         console.error('There has been a problem with fetch:', error);
     }
 }
 __kkym__plugins__.run = async function () {
-    __kkym__plugins__.test();
-    let data = await __kkym__plugins__.get();
+    this.test();
+    let data = await this.get();
     if (!data) await this.update();
     else this.update();
     this.handle(data, await this.get('gld_kkym_col'));
