@@ -38,9 +38,9 @@
     - 填写 `-1`，表示爬取到最后一章  
       *You can set `to` as `-1`, which means downloading to end chapter*  
       *`to`に `-1` を設定すると最後までダウンロードします*
-    - 注意：syosetu不支持 `-1` 参数  
-      *Note: syosetu does not support the parameter `-1`*  
-      *注意：syosetuはパラメータ「−１」をサポートしていません*
+    - 注意：syosetu 网站不支持 `-1` 参数（下载到最后一章）。请确保 end 参数指定的章节存在，否则程序可能会报错。您可以手动访问 syosetu 网站的小说目录页面，确认最新的章节数量。* 
+      *Note: The syosetu website does not support the `-1` parameter (download to the last chapter). Please ensure that the chapter specified by the end parameter exists, otherwise the program may report an error. You can manually visit the novel directory page of the syosetu website to confirm the latest number of chapters.*  
+      *注意：syosetuサイトでは、`-1`パラメータ（最後の章までダウンロード）はサポートされていません。endパラメータで指定された章が存在することを確認してください。そうでない場合、プログラムはエラーを報告する可能性があります。syosetuの小説ディレクトリページに手動でアクセスして、最新の章数を確認できます*
 - **to_path**: 保存的文件夹名  
   *Name of the folder where it will be saved*  
   保存フォルダ名
