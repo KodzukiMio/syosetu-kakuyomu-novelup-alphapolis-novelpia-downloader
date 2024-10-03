@@ -3,7 +3,6 @@ using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium;
 using System.Text;
 using System.Text.RegularExpressions;
-using static syosetu_dl.Program;
 
 namespace syosetu_dl {
     internal class Program {
@@ -28,6 +27,7 @@ namespace syosetu_dl {
         public static bool b_si = false;
         public static string? s_sttf;
         public static StringBuilder? sttf;
+        public static string msg = "\nConnection timed out or IP request rate limit reached,some website has limited bandwidth, \nso if you encounter a connection timeout, don't worry, the program will automatically wait for a while and try to continue download.";
         public static void SaveImme() {
             if (b_sttf && sttf != null) {
                 string sttfbd = sttf.ToString();
@@ -197,7 +197,7 @@ namespace syosetu_dl {
                     req_main = false;
                 }
                 string url = id_collection[i - 1 < 0 ? 0 : i - 1];
-                if (driver != null) {//Bypass captcha verification, bypass dynamic JS token verification
+                if (driver != null) {//Bypass captcha and dynamic JS token verification
                     driver.Navigate().GoToUrl(url);
                     IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
                     while (true) {
@@ -214,7 +214,6 @@ namespace syosetu_dl {
                         str.Append(title.ToString()).Append('\n');
                         AppendTitle(title.ToString(), i);
                     }
-
                     object? ifs;
                 retry:
                     ifs = js.ExecuteScript("return document.getElementById('novelBody').innerText;");
@@ -273,7 +272,7 @@ namespace syosetu_dl {
                     string[] id_list = File.ReadAllText(args[1]).Split(',');
                     if (id_list.Length > 0) {
                         foreach (string id in id_list) {
-                            retry:
+                        retry:
                             try {
                                 int idx = int.Parse(id);
                                 string result = (await novel_hd(base_url, idx)).ToString();
@@ -281,8 +280,8 @@ namespace syosetu_dl {
                                 WriteText(ref file, ref result, b_fw);
                                 if (b_si) SaveImme();
                             } catch (Exception ex) {
-                                Console.WriteLine(ex.ToString());
-                                Console.WriteLine("\n\nConnection timed out or IP request rate limit reached. Automatically waiting for 1 minute before retrying the request.\n某些网站会限制IP请求速率,1 min后程序会自动继续请求下一章节.");
+                                //Console.WriteLine(ex.ToString());
+                                Console.WriteLine(msg);
                                 Thread.Sleep(60000);
                                 goto retry;
                             }
@@ -307,8 +306,8 @@ namespace syosetu_dl {
                     WriteText(ref file, ref result, b_fw);
                     if (b_si) SaveImme();
                 } catch (Exception e) {
-                    Console.WriteLine(e.ToString());
-                    Console.WriteLine("\n\nConnection timed out or IP request rate limit reached. Automatically waiting for 1 minute before retrying the request.\n某些网站会限制IP请求速率,1 min后程序会自动继续请求下一章节.");
+                    //Console.WriteLine(e.ToString());
+                    Console.WriteLine(msg);
                     Thread.Sleep(60000);
                     i--;
                     continue;
