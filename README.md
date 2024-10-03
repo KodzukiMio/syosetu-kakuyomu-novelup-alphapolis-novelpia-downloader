@@ -60,7 +60,7 @@
   *(オプション) ダウンロードタスクが完了していなくても、すぐにタイトルファイルに書き込みます*
 
 
-## 如何知道 syosetu 小说最大章节数？ / How to find the maximum chapter number of a Syosetu novel? / syosetu小説の最大章番号を確認するには？
+#### 如何知道 syosetu 小说最大章节数？ / How to find the maximum chapter number of a Syosetu novel? / syosetu小説の最大章番号を確認するには？
 
 syosetu 小说的 URL 是连续的，所以你可以点击最后一章节，查看 URL 最后面的那个数字就知道最大章节数了。
 
