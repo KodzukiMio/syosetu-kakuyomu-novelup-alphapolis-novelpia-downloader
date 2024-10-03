@@ -18,7 +18,7 @@ __kkym__plugins__.get = function (key = 'gld_kkym') {
 }
 __kkym__plugins__.update = async function () {
     try {
-        this.ok(await this.getfrom_url('https://kakuyomu.jp/settings/blocklist'));
+        return this.ok(await this.getfrom_url('https://kakuyomu.jp/settings/blocklist'));
     } catch (error) {
         console.error('There has been a problem with fetch:', error);
     }
@@ -26,7 +26,7 @@ __kkym__plugins__.update = async function () {
 __kkym__plugins__.run = async function () {
     this.test();
     let data = await this.get();
-    if (!data) await this.update();
+    if (!data) data = await this.update();
     else this.update();
     this.handle(data, await this.get('gld_kkym_col'));
     this.refresh();
@@ -61,12 +61,12 @@ __kkym__plugins__.handle = function (data, type) {
     data.forEach(str => umap.set(str, true));
     let nodes = document.querySelectorAll('a[href^="/users/"]');
     this.settype(umap, nodes, type, null);
-    if (data.length) console.log(`blocked :${data}\nblock type:${type}`);
+    if (data.length) console.log(`blocked :${data}\nblock type :${type}`);
 }
 __kkym__plugins__.refresh = async function (data, show = true) {
     if (!data) {
         data = await this.get("gld_kkym_usr");
-        if (!data) await this.test();
+        if (!data) data = await this.test();
     }
     if (show && data.length) console.log(`mark :${data}`);
     let type = await this.get("gld_kkym_fcol");
@@ -88,5 +88,6 @@ __kkym__plugins__.test = async function () {
         if (idf != -1) datas.push(str.substring(0, idf));
     }
     chrome.storage.local.set({ gld_kkym_usr: datas }, () => this.refresh(datas, false));
+    return datas;
 }
 __kkym__plugins__.run();
