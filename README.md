@@ -58,7 +58,31 @@
 - **-si** -> SaveImmediately: 立即写入标题文件，即使下载任务未完成  
   *Writes to the title file immediately, even if the download task is not completed*  
   *(オプション) ダウンロードタスクが完了していなくても、すぐにタイトルファイルに書き込みます*
-  
+
+
+## 如何知道 syosetu 小说最大章节数？ / How to find the maximum chapter number of a Syosetu novel? / syosetu小説の最大章番号を確認するには？
+
+syosetu 小说的 URL 是连续的，所以你可以点击最后一章节，查看 URL 最后面的那个数字就知道最大章节数了。
+
+Syosetu novel URLs are sequential. You can find the maximum chapter number by clicking on the last chapter and checking the number at the end of the URL.
+
+syosetu小説のURLは連続しています。最後の章をクリックして、URLの末尾にある数字を確認することで、最大章番号を確認できます。
+
+例如：
+
+For example:
+
+例えば：
+
+https://ncode.syosetu.com/n7918ic/19/  
+
+最大章节数是 19。
+
+The maximum chapter number is 19.
+
+最大章番号は19です。
+
+
 ### 示例 (Examples) / 例
 
 命令格式 (CMD Format) / コマンド形式:
