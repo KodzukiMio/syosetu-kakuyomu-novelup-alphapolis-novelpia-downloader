@@ -68,19 +68,11 @@ Syosetu novel URLs are sequential. You can find the maximum chapter number by cl
 
 syosetu小説のURLは連続しています。最後の章をクリックして、URLの末尾にある数字を確認することで、最大章番号を確認できます。
 
-例如：
-
-For example:
-
-例えば：
+例如/For example/例えば：
 
 https://ncode.syosetu.com/n7918ic/19/  
 
-最大章节数是 19。
-
-The maximum chapter number is 19.
-
-最大章番号は19です。
+最大章节数是 19。/The maximum chapter number is 19./最大章番号は19です。
 
 
 ### 示例 (Examples) / 例
