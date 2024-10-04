@@ -162,7 +162,7 @@ https://www.alphapolis.co.jp/novel/xxxxx/yyyyy
 * Currently does not support Korean websites ending in `.com`.
 
 **For more details:**
-
+Paid chapters (unpaid) are not supported.
 See the `\chrome-extensions\novelpia-download` directory.
 
 # Other
