@@ -1,0 +1,1 @@
+document.addEventListener('DOMContentLoaded', () => document.getElementById('novelpia-dl').addEventListener('click', async () => __novelpia_dl.set_ok(__novelpia_dl.STATE)));

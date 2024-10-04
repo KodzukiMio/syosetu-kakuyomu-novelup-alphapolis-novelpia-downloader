@@ -1,0 +1,37 @@
+<html>
+
+<body style="background-color: gray;color: white;">
+    <h1>blacklist-follow-type</h1>
+    <span style="font-size: 150%;">Before using, please <span style="color: greenyellow;">log in</span> to your Kakuyomu
+        account.
+        Then click the <span style="color: rgb(47, 231, 255);">red</span> or <span
+            style="color: rgb(47, 231, 255);">ignore</span> button to set the default block type.
+        If the blacklist or following-list is updated, the search page should also be refreshed (not navigated back).
+    </span>
+    <script src="main.js"></script>
+</body>
+<br>
+<button id="black_red">red</button>
+<button id="black_ignore">ignore</button>
+<!-- <button id="follow_green">follow_green</button>
+<button id="follow_ignore">follow_ignore</button> -->
+<span style="font-size: 150%;">
+    <br>
+    You can set individual tag types for each followed user at <span
+        style="color: greenyellow;">https://kakuyomu.jp/users/*/following_users</span>.
+    <br>
+    Click "visible". Green means the user tag will be green on the search page, while red means the user will be hidden.
+    <br>
+    <span style="color: rgb(190, 0, 0);">Finally, reload the search page.(not rollback)</span>
+    <br>
+    <span style="color: greenyellow;">This plugin works on https://kakuyomu.jp/search*</span>
+    <br>
+    <span style="color: yellow">This plugin requires refreshing the search page twice when it's updated
+        or
+        loaded for the first time. The first refresh is used to fetch data, and it will only work after the second
+        refresh.<br>
+        Sometimes, changes won't appear immediately after refreshing the page when the list is updated because
+        it's waiting to retrieve new data. The changes will usually appear after the next refresh.</span>
+</span>
+
+</html>

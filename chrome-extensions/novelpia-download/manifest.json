@@ -1,0 +1,24 @@
+{
+  "manifest_version": 3,
+  "name": "novelpia-download",
+  "description": "author: https://github.com/KodzukiMio",
+  "version": "1.0",
+  "action": {
+    "default_popup": "main.html",
+    "default_icon": "favicon.png"
+  },
+  "permissions": ["storage"],
+  "content_scripts": [
+    {
+      "js": ["base.js", "novel.js"],
+      "matches": ["https://novelpia.jp/novel/*", "https://novelpia.com/novel/*"]
+    },
+    {
+      "js": ["base.js", "viewer.js"],
+      "matches": [
+        "https://novelpia.jp/viewer/*",
+        "https://novelpia.com/viewer/*"
+      ]
+    }
+  ]
+}
