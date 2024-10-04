@@ -165,6 +165,8 @@ https://www.alphapolis.co.jp/novel/xxxxx/yyyyy
 
 See the `\chrome-extensions\novelpia-download` directory.
 
+#Other
+
 未来的更新计划: 
 
 0. 实现异步同时下载多个小说章节
