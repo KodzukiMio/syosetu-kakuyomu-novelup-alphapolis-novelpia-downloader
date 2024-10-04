@@ -72,7 +72,6 @@ __novelpia_dl.handle = async function () {
     if (type == __novelpia_dl.VIEWER) __novelpia_dl.save_file(document.getElementById("novel_drawing").innerText, `${url.replace(/[^0-9\s]/g, '')}.txt`);
     else if (type == __novelpia_dl.NOVEL) {
         let filename = `novel-${url.replace(/[^0-9\s]/g, '')}`;
-        if (!filename) return;
         this.global_id = 1;
         this.collection = new Map();
         this.collect(filename, 0, window.location.href.replace(/[^0-9\s]/g, ''), window.location.href.substring(0, window.location.href.lastIndexOf('/', 20) + 1) + 'proc/viewer_data/');
