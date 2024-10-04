@@ -165,7 +165,7 @@ https://www.alphapolis.co.jp/novel/xxxxx/yyyyy
 
 See the `\chrome-extensions\novelpia-download` directory.
 
-#Other
+# Other
 
 未来的更新计划: 
 
