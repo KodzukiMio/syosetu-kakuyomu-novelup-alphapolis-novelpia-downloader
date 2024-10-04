@@ -18,6 +18,7 @@
 - Kakuyomu (カクヨム)
 - Novelup (ノベルアップ)
 - Alphapolis (アルファポリス)
+- Novelpia (.jp not .com) -> chrome extension
 
 > alphapolis：无法爬取付费文章，需要Firefox。  
 > _alphapolis_: Cannot scrape paid articles; requires Firefox.  
@@ -142,9 +143,27 @@ https://www.alphapolis.co.jp/novel/xxxxx/yyyyy
 ```
 
 ### chrome extension
+
+## kakuyomu chrome
+
 - kakuyomu chrome拓展,用于屏蔽黑名单用户与标记关注用户.
 - Kakuyomu Chrome Extension for Blocking Blacklisted Users and Highlighting Followed Users.
 - カクヨム Chrome 拡張機能：ブラックリストユーザーの非表示とフォローユーザーの強調表示.
+
+## Novelpia Chrome Extension
+
+**Supported Websites:**
+
+* `https://novelpia.jp/novel/*`
+* `https://novelpia.jp/viewer/*`
+
+**Unsupported Websites:**
+
+* Currently does not support Korean websites ending in `.com`.
+
+**For more details:**
+
+See the `\chrome-extensions\novelpia-download` directory.
 
 未来的更新计划: 
 
