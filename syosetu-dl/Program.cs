@@ -251,7 +251,7 @@ namespace syosetu_dl {
         }
         static async Task Main(string[] args) {
             if (args.Length == 0) {
-                Console.WriteLine("https://github.com/KodzukiMio/syosetu-kakuyomu-novelup-alphapolis-downloader\nargs:\nbase_url from to to_folder ...\nbase_url file_path to_path ...");
+                Console.WriteLine("https://github.com/KodzukiMio/syosetu-kakuyomu-novelup-alphapolis-novelpia-downloader\nargs:\nbase_url from to to_folder ...\nbase_url file_path to_path ...");
                 return;
             }
             string base_url = args[0];
