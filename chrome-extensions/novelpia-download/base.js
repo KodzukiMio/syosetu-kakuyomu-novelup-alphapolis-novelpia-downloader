@@ -17,14 +17,7 @@ __novelpia_dl.decode = function (str) {
         if (p1.charAt(0) === '#') {
             return String.fromCharCode(p1.charAt(1) === 'x' ? parseInt(p1.substring(2), 16) : parseInt(p1.substring(1), 10));
         } else {
-            var entities = {
-                amp: '&',
-                apos: "'",
-                quot: '"',
-                lt: '<',
-                gt: '>',
-                nbsp: '\u00A0'
-            };
+            var entities = { amp: '&', apos: "'", quot: '"', lt: '<', gt: '>', nbsp: '\u00A0' };
             return entities[p1] || match;
         }
     });
@@ -36,10 +29,6 @@ __novelpia_dl.getfrom_url = async function (url) {
     }));
     if (!rep.ok) throw new Error('Network response was not ok');
     return await rep.text();
-}
-__novelpia_dl.init = function (type) {
-    __novelpia_dl.set(__novelpia_dl.CHAPTER, window.location.href);
-    __novelpia_dl.set(__novelpia_dl.TYPE, type);
 }
 __novelpia_dl.set_page = function (nid, page, callback) {//page -> 0
     localStorage[`novel_page_${nid}`] = page.toString();
@@ -86,15 +75,14 @@ __novelpia_dl.handle = async function () {
     let type = null;
     if (window.location.href.indexOf("/novel/") != -1) type = __novelpia_dl.NOVEL;
     else type = __novelpia_dl.VIEWER;
-    this.init(type);
-    let url = await __novelpia_dl.get(__novelpia_dl.CHAPTER);
+    let url = window.location.href;
     if (url != window.location.href) return;
     if (type == __novelpia_dl.VIEWER) __novelpia_dl.save_file(this.decode(document.getElementById("novel_drawing").innerText.replace(/<[^>]+>/g, '')), `${url.replace(/[^0-9\s]/g, '')}.txt`);
     else if (type == __novelpia_dl.NOVEL) {
         let filename = `novel-${url.replace(/[^0-9\s]/g, '')}`;
         this.global_id = 1;
         this.collection = new Map();
-        this.collect(filename, 0, window.location.href.replace(/[^0-9\s]/g, ''), window.location.href.substring(0, window.location.href.lastIndexOf('/', 20) + 1) + 'proc/viewer_data/');
+        this.collect(filename, 0, window.location.href.match(/\d+/)?.[0], window.location.href.substring(0, window.location.href.lastIndexOf('/', 20) + 1) + 'proc/viewer_data/');
     } else window.console.log("no choice");
 };
 __novelpia_dl.sleep = async function (delay) {
@@ -121,8 +109,6 @@ __novelpia_dl.VIEWER = 0xfff0;
 __novelpia_dl.NOVEL = 0xfff1;
 __novelpia_dl.OK = 0xfff2;
 __novelpia_dl.STATE = "novelpia_listen";
-__novelpia_dl.CHAPTER = "novelpia_chapter";
-__novelpia_dl.TYPE = "novelpia_type";
 __novelpia_dl.set = function (key, value, callback = () => { }) {
     let data = {};
     data[key] = value;
