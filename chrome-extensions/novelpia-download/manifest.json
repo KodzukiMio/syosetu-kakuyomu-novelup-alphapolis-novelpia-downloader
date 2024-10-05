@@ -10,11 +10,11 @@
   "permissions": ["storage"],
   "content_scripts": [
     {
-      "js": ["base.js", "novel.js"],
+      "js": ["base.js", "item.js"],
       "matches": ["https://novelpia.jp/novel/*", "https://novelpia.com/novel/*"]
     },
     {
-      "js": ["base.js", "viewer.js"],
+      "js": ["base.js", "item.js"],
       "matches": [
         "https://novelpia.jp/viewer/*",
         "https://novelpia.com/viewer/*"
