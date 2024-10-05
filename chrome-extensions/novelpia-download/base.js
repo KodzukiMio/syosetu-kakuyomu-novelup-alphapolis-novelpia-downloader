@@ -79,7 +79,7 @@ __novelpia_dl.handle = async function () {
     if (url != window.location.href) return;
     if (type == __novelpia_dl.VIEWER) __novelpia_dl.save_file(this.decode(document.getElementById("novel_drawing").innerText.replace(/<[^>]+>/g, '')), `${url.replace(/[^0-9\s]/g, '')}.txt`);
     else if (type == __novelpia_dl.NOVEL) {
-        let filename = `novel-${url.replace(/[^0-9\s]/g, '')}`;
+        let filename = `novel-${url.match(/\d+/)?.[0]}`;
         this.global_id = 1;
         this.collection = new Map();
         this.collect(filename, 0, window.location.href.match(/\d+/)?.[0], window.location.href.substring(0, window.location.href.lastIndexOf('/', 20) + 1) + 'proc/viewer_data/');

@@ -11,11 +11,9 @@
   "content_scripts": [
     {
       "js": ["base.js", "item.js"],
-      "matches": ["https://novelpia.jp/novel/*", "https://novelpia.com/novel/*"]
-    },
-    {
-      "js": ["base.js", "item.js"],
       "matches": [
+        "https://novelpia.jp/novel/*",
+        "https://novelpia.com/novel/*",
         "https://novelpia.jp/viewer/*",
         "https://novelpia.com/viewer/*"
       ]
