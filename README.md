@@ -18,7 +18,7 @@
 - Kakuyomu (カクヨム)
 - Novelup (ノベルアップ)
 - Alphapolis (アルファポリス)
-- Novelpia (.jp not .com) -> chrome extension
+- Novelpia -> chrome extension
 
 > alphapolis：无法爬取付费文章，需要Firefox。  
 > _alphapolis_: Cannot scrape paid articles; requires Firefox.  
@@ -156,10 +156,8 @@ https://www.alphapolis.co.jp/novel/xxxxx/yyyyy
 
 * `https://novelpia.jp/novel/*`
 * `https://novelpia.jp/viewer/*`
-
-**Unsupported Websites:**
-
-* Currently does not support Korean websites ending in `.com`.
+* `https://novelpia.com/novel/*`
+* `https://novelpia.com/viewer/*`
 
 **For more details:**
 
