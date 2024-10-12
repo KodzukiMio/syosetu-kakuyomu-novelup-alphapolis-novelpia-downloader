@@ -1,21 +1,32 @@
 var __kkym__plugins__ = __kkym__plugins__ || {};
 __kkym__plugins__.set_mark = function (data) {
-    chrome.storage.local.set({ gld_kkym_mark: data }, function () { });
+    const obj = Object.fromEntries(data);
+    chrome.storage.local.set({ gld_kkym_mark: obj }, function () { });
 };
 __kkym__plugins__.get = function (key) {
     return new Promise((resolve, reject) => {
         chrome.storage.local.get([key], function (result) {
-            resolve(result[key]);
+            resolve(new Map(Object.entries(result[key] || {})));
         });
     });
 };
-__kkym__plugins__.mark_update = function (data) {
-    let vis = new Map();
+__kkym__plugins__.mark_update = async function (data, to_del = null) {
+    let vis = (await this.get("gld_kkym_mark")) || new Map();
+    if (!(vis instanceof Map)) vis = new Map();
     data.forEach(node => {
-        let instr = node.innerText;
-        vis[instr.substring(0, instr.lastIndexOf('@') - 1)] = node.__kkym_type;
+        if (node.innerText == to_del) vis.delete(to_del.substring(0, to_del.lastIndexOf('@') - 1));
+        if (node.__kkym_type == "ignore") {
+            let instr = node.innerText;
+            vis.set(instr.substring(0, instr.lastIndexOf('@') - 1), true);
+        }
     });
     this.set_mark(vis);
+}
+__kkym__plugins__.get_id = function () {
+    const url = window.location.href;
+    const match = url.match(/page=(\d+)/);
+    if (match) return match[1].toString();
+    return '1';
 }
 __kkym__plugins__.mark = async function () {
     let nodes = document.querySelectorAll('a[href^="/users/"]');
@@ -25,13 +36,20 @@ __kkym__plugins__.mark = async function () {
         let idf = str.lastIndexOf('@');
         if (idf != -1) data.push(nodes[idx]);
     }
-    let vis = await this.get("gld_kkym_mark");
+    let vis = await this.get("gld_kkym_mark") || new Map();
+    try {
+        vis.get(1);
+    } catch {
+        vis = new Map();
+        this.set_mark(vis);
+    }
     data.forEach(node => {
         let button = document.createElement('button');
         button.textContent = "visiable";
         if (vis) {
-            let type = vis[node.innerText.substring(0, node.innerText.lastIndexOf('@') - 1)];
+            let type = vis.get(node.innerText.substring(0, node.innerText.lastIndexOf('@') - 1));
             node.__kkym_type = type ? type : "green";
+            if (node.__kkym_type == true) node.__kkym_type = "ignore";
             if (node.__kkym_type == "green") button.style.color = "rgb(0,255,0)";
             else button.style.color = "rgb(255,0,0)";
         } else {
@@ -42,14 +60,14 @@ __kkym__plugins__.mark = async function () {
             if (node.__kkym_type === 'green') {
                 node.__kkym_type = "ignore";
                 button.style.color = "rgb(255,0,0)";
+                this.mark_update(data);
             } else {
                 node.__kkym_type = 'green';
                 button.style.color = "rgb(0,255,0)";
+                this.mark_update(data, node.innerText);
             }
-            this.mark_update(data);
         });
         node.parentNode.append(button);
     });
-    this.mark_update(data);
 };
 __kkym__plugins__.mark();

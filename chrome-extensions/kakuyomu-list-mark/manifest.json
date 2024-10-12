@@ -15,7 +15,7 @@
     },
     {
       "js": ["mark.js"],
-      "matches": ["https://kakuyomu.jp/users/*/following_users"]
+      "matches": ["https://kakuyomu.jp/users/*/following_users*"]
     }
   ]
 }

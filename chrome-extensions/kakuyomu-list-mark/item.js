@@ -41,7 +41,7 @@ __kkym__plugins__.settype = function (umap, nodes, type, filter = null) {
             if (umap.has(link.innerText)) {
                 let pnode = link.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement;
                 if (filter) {
-                    if (filter[link.innerText] == "ignore") pnode.remove();
+                    if (filter.has(link.innerText)) pnode.remove();
                     else pnode.style.color = "rgb(0,255,0)";
                 } else {
                     if (type == 'ignore') pnode.remove();
@@ -59,6 +59,13 @@ __kkym__plugins__.handle = function (data, type) {
     this.settype(umap, nodes, type, null);
     if (data.length) console.log(`blocked :${data}\nblock type :${type}`);
 }
+__kkym__plugins__.get_map = function (key) {
+    return new Promise((resolve, reject) => {
+        chrome.storage.local.get([key], function (result) {
+            resolve(new Map(Object.entries(result[key] || {})));
+        });
+    });
+};
 __kkym__plugins__.refresh = async function (data, show = true) {
     if (!data) {
         data = await this.get("gld_kkym_usr");
@@ -70,18 +77,23 @@ __kkym__plugins__.refresh = async function (data, show = true) {
     let nodes = document.querySelectorAll('a[href^="/users/"]');
     const umap = new Map();
     data.forEach(str => umap.set(str, true));
-    let filter = await this.get("gld_kkym_mark");
+    let filter = await this.get_map("gld_kkym_mark");
     if (show) console.log("filter :", filter);
     this.settype(umap, nodes, type, filter);
 }
 __kkym__plugins__.test = async function () {
-    const url = `https://kakuyomu.jp/users/${(new DOMParser()).parseFromString(await this.getfrom_url('https://kakuyomu.jp/settings/others'), 'text/html').querySelectorAll('a[href^="/users/"]')[0].innerText.substring(1)}/following_users`;
-    const data = (new DOMParser()).parseFromString(await this.getfrom_url(url), 'text/html').querySelectorAll('a[href^="/users/"]');
+    const base_url = `https://kakuyomu.jp/users/${(new DOMParser()).parseFromString(await this.getfrom_url('https://kakuyomu.jp/settings/others'), 'text/html').querySelectorAll('a[href^="/users/"]')[0].innerText.substring(1)}/following_users?page=`;
     const datas = [];
-    for (let idx = 2; idx < data.length; idx++) {
-        let str = data[idx].innerText;
-        let idf = str.lastIndexOf('@');
-        if (idf != -1) datas.push(str.substring(0, idf));
+    let idx = 1;
+    while (true) {
+        const url = base_url + idx++;
+        const data = (new DOMParser()).parseFromString(await this.getfrom_url(url), 'text/html').querySelectorAll('a[href^="/users/"]');
+        if (data.length <= 5) break;
+        for (let idx = 2; idx < data.length; idx++) {
+            let str = data[idx].innerText;
+            let idf = str.lastIndexOf('@');
+            if (idf != -1) datas.push(str.substring(0, idf));
+        }
     }
     chrome.storage.local.set({ gld_kkym_usr: datas }, () => this.refresh(datas, false));
     return datas;
