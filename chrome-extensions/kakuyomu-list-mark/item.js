@@ -39,14 +39,24 @@ __kkym__plugins__.settype = function (umap, nodes, type, filter = null) {
     nodes.forEach(link => {
         try {
             if (umap.has(link.innerText)) {
+                let is_tag = false;
                 let pnode = link.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement;
-                if (window.location.href.indexOf("/tags/") != -1) pnode = link;
+                if (window.location.href.indexOf("/tags/") != -1) {
+                    pnode = link.parentElement.parentElement.parentElement.parentElement;
+                    is_tag = true;
+                }
                 if (filter) {
-                    if (filter.has(link.innerText)) pnode.remove();
-                    else pnode.style.color = "rgb(0,255,0)";
+                    if (filter.has(link.innerText)) pnode.remove();//backgroundColor
+                    else {
+                        if (is_tag) pnode.style.backgroundColor = "rgb(0,255,0)";
+                        else pnode.style.color = "rgb(0,255,0)";
+                    }
                 } else {
                     if (type == 'ignore') pnode.remove();
-                    else pnode.style.color = type;
+                    else {
+                        if (is_tag) pnode.style.backgroundColor = "rgb(0,255,0)";
+                        else pnode.style.color = type;
+                    }
                 }
             }
         } catch (e) { }
