@@ -99,12 +99,13 @@ __kkym__plugins__.test = async function () {
     while (true) {
         const url = base_url + idx++;
         const data = (new DOMParser()).parseFromString(await this.getfrom_url(url), 'text/html').querySelectorAll('a[href^="/users/"]');
-        if (data.length <= 5) break;
+        if (data.length <= 7) break;//bug fix
         for (let idx = 2; idx < data.length; idx++) {
             let str = data[idx].innerText;
             let idf = str.lastIndexOf('@');
             if (idf != -1) datas.push(str.substring(0, idf));
         }
+        //console.log(`Add from page ${idx} -> ${datas}`);
     }
     chrome.storage.local.set({ gld_kkym_usr: datas }, () => this.refresh(datas, false));
     return datas;
