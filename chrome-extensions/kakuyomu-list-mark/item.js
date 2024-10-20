@@ -94,18 +94,20 @@ __kkym__plugins__.refresh = async function (data, show = true) {
 }
 __kkym__plugins__.test = async function () {
     const base_url = `https://kakuyomu.jp/users/${(new DOMParser()).parseFromString(await this.getfrom_url('https://kakuyomu.jp/settings/others'), 'text/html').querySelectorAll('a[href^="/users/"]')[0].innerText.substring(1)}/following_users?page=`;
+    //const base_url ="https://kakuyomu.jp/users/*/following_users?page="
     const datas = [];
     let idx = 1;
     while (true) {
         const url = base_url + idx++;
-        const data = (new DOMParser()).parseFromString(await this.getfrom_url(url), 'text/html').querySelectorAll('a[href^="/users/"]');
-        if (data.length <= 7) break;//bug fix
+        const html_text = await this.getfrom_url(url);
+        if (html_text.indexOf("フォローしてません") != -1) break;
+        const data = (new DOMParser()).parseFromString(html_text, 'text/html').querySelectorAll('a[href^="/users/"]');
         for (let idx = 2; idx < data.length; idx++) {
             let str = data[idx].innerText;
             let idf = str.lastIndexOf('@');
             if (idf != -1) datas.push(str.substring(0, idf));
         }
-        //console.log(`Add from page ${idx} -> ${datas}`);
+        //console.log(`debug add from page ${idx - 1} -> ${datas}`);
     }
     chrome.storage.local.set({ gld_kkym_usr: datas }, () => this.refresh(datas, false));
     return datas;
