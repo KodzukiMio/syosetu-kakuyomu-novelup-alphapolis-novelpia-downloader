@@ -13,6 +13,11 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('black_ignore').addEventListener('click', function () {
         set_option('ignore');
     });
+    document.getElementById('clear_storage').addEventListener('click', function () {
+        chrome.storage.local.clear(function () {
+            console.log("local storage cleared");
+        });
+    });
     // document.getElementById('follow_green').addEventListener('click', function () {
     //     set_option_f('rgb(0,255,0)');
     // });
