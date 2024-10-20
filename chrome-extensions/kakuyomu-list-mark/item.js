@@ -40,6 +40,7 @@ __kkym__plugins__.settype = function (umap, nodes, type, filter = null) {
         try {
             if (umap.has(link.innerText)) {
                 let pnode = link.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement;
+                if (window.location.href.indexOf("/tags/") != -1) pnode = link;
                 if (filter) {
                     if (filter.has(link.innerText)) pnode.remove();
                     else pnode.style.color = "rgb(0,255,0)";

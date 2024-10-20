@@ -11,7 +11,7 @@
   "content_scripts": [
     {
       "js": ["item.js"],
-      "matches": ["https://kakuyomu.jp/search*"]
+      "matches": ["https://kakuyomu.jp/search*","https://kakuyomu.jp/tags/*"]
     },
     {
       "js": ["mark.js"],
