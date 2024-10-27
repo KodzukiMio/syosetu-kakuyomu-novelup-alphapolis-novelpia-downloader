@@ -14,9 +14,9 @@ __kkym__plugins__.mark_update = async function (data, to_del = null) {
     let vis = (await this.get("gld_kkym_mark")) || new Map();
     if (!(vis instanceof Map)) vis = new Map();
     data.forEach(node => {
-        if (node.innerText == to_del) vis.delete(to_del.substring(0, to_del.lastIndexOf('@') - 1));
+        if (node.textContent == to_del) vis.delete(to_del.substring(0, to_del.lastIndexOf('@') - 1));
         if (node.__kkym_type == "ignore") {
-            let instr = node.innerText;
+            let instr = node.textContent;
             vis.set(instr.substring(0, instr.lastIndexOf('@') - 1), true);
         }
     });
@@ -32,7 +32,7 @@ __kkym__plugins__.mark = async function () {
     let nodes = document.querySelectorAll('a[href^="/users/"]');
     const data = [];
     for (let idx = 2; idx < nodes.length; idx++) {
-        let str = nodes[idx].innerText;
+        let str = nodes[idx].textContent;
         let idf = str.lastIndexOf('@');
         if (idf != -1) data.push(nodes[idx]);
     }
@@ -47,7 +47,7 @@ __kkym__plugins__.mark = async function () {
         let button = document.createElement('button');
         button.textContent = "visiable";
         if (vis) {
-            let type = vis.get(node.innerText.substring(0, node.innerText.lastIndexOf('@') - 1));
+            let type = vis.get(node.textContent.substring(0, node.textContent.lastIndexOf('@') - 1));
             node.__kkym_type = type ? type : "green";
             if (node.__kkym_type == true) node.__kkym_type = "ignore";
             if (node.__kkym_type == "green") button.style.color = "rgb(0,255,0)";
@@ -64,7 +64,7 @@ __kkym__plugins__.mark = async function () {
             } else {
                 node.__kkym_type = 'green';
                 button.style.color = "rgb(0,255,0)";
-                this.mark_update(data, node.innerText);
+                this.mark_update(data, node.textContent);
             }
         });
         node.parentNode.append(button);

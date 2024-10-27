@@ -38,7 +38,7 @@ __kkym__plugins__.getfrom_url = async function (url) {
 __kkym__plugins__.settype = function (umap, nodes, type, filter = null) {
     nodes.forEach(link => {
         try {
-            if (umap.has(link.innerText)) {
+            if (umap.has(link.textContent)) {//must use textContent,not innerText;
                 let is_tag = false;
                 let pnode = link.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement;
                 if (window.location.href.indexOf("/tags/") != -1) {
@@ -46,7 +46,7 @@ __kkym__plugins__.settype = function (umap, nodes, type, filter = null) {
                     is_tag = true;
                 }
                 if (filter) {
-                    if (filter.has(link.innerText)) pnode.remove();//backgroundColor
+                    if (filter.has(link.textContent)) pnode.remove();//backgroundColor
                     else {
                         if (is_tag) pnode.style.backgroundColor = "rgb(0,255,0)";
                         else pnode.style.color = "rgb(0,255,0)";
@@ -93,7 +93,7 @@ __kkym__plugins__.refresh = async function (data, show = true) {
     this.settype(umap, nodes, type, filter);
 }
 __kkym__plugins__.test = async function () {
-    const base_url = `https://kakuyomu.jp/users/${(new DOMParser()).parseFromString(await this.getfrom_url('https://kakuyomu.jp/settings/others'), 'text/html').querySelectorAll('a[href^="/users/"]')[0].innerText.substring(1)}/following_users?page=`;
+    const base_url = `https://kakuyomu.jp/users/${(new DOMParser()).parseFromString(await this.getfrom_url('https://kakuyomu.jp/settings/others'), 'text/html').querySelectorAll('a[href^="/users/"]')[0].textContent.substring(1)}/following_users?page=`;
     //const base_url ="https://kakuyomu.jp/users/*/following_users?page="
     const datas = [];
     let idx = 1;
@@ -103,7 +103,7 @@ __kkym__plugins__.test = async function () {
         if (html_text.indexOf("フォローしてません") != -1) break;
         const data = (new DOMParser()).parseFromString(html_text, 'text/html').querySelectorAll('a[href^="/users/"]');
         for (let idx = 2; idx < data.length; idx++) {
-            let str = data[idx].innerText;
+            let str = data[idx].textContent;
             let idf = str.lastIndexOf('@');
             if (idf != -1) datas.push(str.substring(0, idf));
         }
