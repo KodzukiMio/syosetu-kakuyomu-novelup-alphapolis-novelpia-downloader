@@ -142,7 +142,7 @@ https://novelup.plus/story/xxxxx
 https://www.alphapolis.co.jp/novel/xxxxx/yyyyy
 ```
 
-####打包小说文件/Combine files
+#### 打包小说文件/Combine files
 ```bash 
 syosetul-dl combine from_folder to_file_path
 ```
