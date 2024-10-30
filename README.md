@@ -159,6 +159,7 @@ combine为打包关键词,from_folder为下载小说所在的目录,to_file_path
 ```bash 
 syosetu-dl combine mynovel out.txt -reg Chapter-[3-8][1-2]
 ```
+(Merging novelpia is not currently supported.)
 
 # chrome extension
 
