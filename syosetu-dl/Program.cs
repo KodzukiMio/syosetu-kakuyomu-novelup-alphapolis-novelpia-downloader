@@ -3,6 +3,8 @@ using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Linq.Expressions;
+using System.IO;
 
 namespace syosetu_dl {
     internal class Program {
@@ -10,6 +12,7 @@ namespace syosetu_dl {
             SaveTitleTargetFile,
             ForceWrite,
             SaveImmediately,
+            regex_parse,
         }
         public delegate Task<StringBuilder> NovelHandle(string base_url, int i);
         public static NovelHandle? novel_hd = null;
@@ -21,10 +24,13 @@ namespace syosetu_dl {
             { "-sttf",ParamType.SaveTitleTargetFile},
             {"-fw",ParamType.ForceWrite},
             { "-si",ParamType.SaveImmediately},
+            { "-reg",ParamType.regex_parse},
         };
         public static bool b_sttf = false;
         public static bool b_fw = true;
         public static bool b_si = false;
+        public static bool b_reg = false;
+        public static string? s_reg;
         public static string? s_sttf;
         public static StringBuilder? sttf;
         public static string msg = "\nConnection timed out or IP request rate limit reached,some website has limited bandwidth, \nso if you encounter a connection timeout, don't worry, the program will automatically wait for a while and try to continue download.";
@@ -246,12 +252,47 @@ namespace syosetu_dl {
                         b_fw = false;
                         b_si = true;
                         break;
+                    case ParamType.regex_parse:
+                        b_reg = true;
+                        ++i;
+                        s_reg = args[i];
+                        break;
                 }
             }
+        }
+        static int ExtractNumber(string filename) {
+            Match match = Regex.Match(filename, @"\d+");
+            return match.Success ? int.Parse(match.Value) : 0;
         }
         static async Task Main(string[] args) {
             if (args.Length == 0) {
                 Console.WriteLine("https://github.com/KodzukiMio/syosetu-kakuyomu-novelup-alphapolis-novelpia-downloader\nargs:\nbase_url from to to_folder ...\nbase_url file_path to_path ...");
+                return;
+            }
+            if (args[0] == "combine") {
+                try {
+                    string dir = args[1];
+                    string out_file = args[2];
+                    parse_param(args, 3);
+                    DirectoryInfo root = new DirectoryInfo(dir);
+                    FileInfo[] files = root.GetFiles();
+                    Console.WriteLine($"Found {files.Length} files.");
+                    StringBuilder sb=new StringBuilder();
+                    Array.Sort(files, (left, right) => {
+                        int left_number = ExtractNumber(left.Name);
+                        int right_number = ExtractNumber(right.Name);
+                        return left_number.CompareTo(right_number);
+                    });
+                    foreach (FileInfo file in files) {
+                        if (s_reg != null)if (!Regex.Match(file.Name, s_reg).Success) continue;
+                        Console.WriteLine($"Get {file.Name}.");
+                        sb.Append(File.ReadAllText(file.FullName));
+                    }
+                    File.WriteAllText(out_file, sb.ToString());
+                    Console.WriteLine("Success.");
+                } catch {
+                    Console.WriteLine("Error regex expression.");
+                }
                 return;
             }
             string base_url = args[0];
