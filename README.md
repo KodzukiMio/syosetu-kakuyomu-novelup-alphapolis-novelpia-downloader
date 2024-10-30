@@ -154,12 +154,21 @@ Combine downloaded novel files from the specified directory into the output file
 
 combine为打包关键词,from_folder为下载小说所在的目录,to_file_path为输出文件路径,-reg为可选参数,值为正则表达式,用于对打包文件名进行选择.
 
+For novels downloaded from Novelpia using a Chrome extension, you can use the `-npa` option to automatically parse the filename, or use the `-seq "(?<=novel-\d+-)\d+"` option to specify the extracted sequence of sorting numbers.
+
 例如/example:
 
 ```bash 
 syosetu-dl combine mynovel out.txt -reg Chapter-[3-8][1-2]
 ```
-(Merging novelpia is not currently supported.)
+
+```bash 
+syosetu-dl combine mynovel out.txt -npa
+```
+
+```bash 
+syosetu-dl combine x out.txt -seq "(?<=novel-\d+-)\d+"
+```
 
 # chrome extension
 
