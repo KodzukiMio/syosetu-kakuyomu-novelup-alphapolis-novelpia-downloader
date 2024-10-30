@@ -13,6 +13,8 @@ namespace syosetu_dl {
             ForceWrite,
             SaveImmediately,
             regex_parse,
+            seq_match,
+            novelpia,
         }
         public delegate Task<StringBuilder> NovelHandle(string base_url, int i);
         public static NovelHandle? novel_hd = null;
@@ -25,6 +27,8 @@ namespace syosetu_dl {
             {"-fw",ParamType.ForceWrite},
             { "-si",ParamType.SaveImmediately},
             { "-reg",ParamType.regex_parse},
+            { "-seq",ParamType.seq_match},
+            { "-npa",ParamType.novelpia},
         };
         public static bool b_sttf = false;
         public static bool b_fw = true;
@@ -32,6 +36,7 @@ namespace syosetu_dl {
         public static bool b_reg = false;
         public static string? s_reg;
         public static string? s_sttf;
+        public static string? s_seq=null;
         public static StringBuilder? sttf;
         public static string msg = "\nConnection timed out or IP request rate limit reached,some website has limited bandwidth, \nso if you encounter a connection timeout, don't worry, the program will automatically wait for a while and try to continue download.";
         public static void SaveImme() {
@@ -257,11 +262,19 @@ namespace syosetu_dl {
                         ++i;
                         s_reg = args[i];
                         break;
+                    case ParamType.seq_match:
+                        ++i;
+                        s_seq = args[i];
+                        break;
+                    case ParamType.novelpia:
+                        s_seq = @"(?<=novel-\d+-)\d+";
+                        break;
                 }
             }
         }
-        static int ExtractNumber(string filename) {
-            Match match = Regex.Match(filename, @"\d+");
+        static int ExtractNumber(string filename,string? reg) {
+            if (reg == null)reg = @"\d+";
+            Match match = Regex.Match(filename, reg);
             return match.Success ? int.Parse(match.Value) : 0;
         }
         static async Task Main(string[] args) {
@@ -279,8 +292,8 @@ namespace syosetu_dl {
                     Console.WriteLine($"Found {files.Length} files.");
                     StringBuilder sb=new StringBuilder();
                     Array.Sort(files, (left, right) => {
-                        int left_number = ExtractNumber(left.Name);
-                        int right_number = ExtractNumber(right.Name);
+                        int left_number = ExtractNumber(left.Name,s_seq);
+                        int right_number = ExtractNumber(right.Name,s_seq);
                         return left_number.CompareTo(right_number);
                     });
                     foreach (FileInfo file in files) {
@@ -290,7 +303,8 @@ namespace syosetu_dl {
                     }
                     File.WriteAllText(out_file, sb.ToString());
                     Console.WriteLine("Success.");
-                } catch {
+                } catch (Exception e){
+                    Console.WriteLine (e.ToString());
                     Console.WriteLine("Error regex expression.");
                 }
                 return;
