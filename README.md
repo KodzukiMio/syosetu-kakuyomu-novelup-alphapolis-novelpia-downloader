@@ -144,6 +144,37 @@ https://www.alphapolis.co.jp/novel/xxxxx/yyyyy
 
 # chrome extension
 
+####打包小说文件/Combine files
+```bash 
+syosetul-dl combine from_folder to_file_path
+```
+ Combine downloaded novel files from the specified directory into the output file path.
+```bash 
+syosetul-dl combine from_folder to_file_path -reg select_regex
+```
+Combine downloaded novel files from the specified directory into the output file path, using a regex to select the filenames to include.
+
+combine为打包关键词,from_folder为下载小说所在的目录,to_file_path为输出文件路径,-reg为可选参数,值为正则表达式,用于对打包文件名进行选择.
+
+例如/example:
+
+syosetu-dl combine mynovel out.txt -reg Chapter-[3-8][1-2]
+
+It will combine 
+Chapter-31.txt.
+Chapter-32.txt.
+Chapter-41.txt.
+Chapter-42.txt.
+Chapter-51.txt.
+Chapter-52.txt.
+Chapter-61.txt.
+Chapter-62.txt.
+Chapter-71.txt.
+Chapter-72.txt.
+Chapter-81.txt.
+Chapter-82.txt.
+to out.txt
+
 ## kakuyomu chrome mark Extension
 
 - kakuyomu chrome拓展,用于屏蔽黑名单用户与标记关注用户.
