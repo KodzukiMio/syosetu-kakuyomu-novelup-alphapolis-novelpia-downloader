@@ -113,7 +113,7 @@ syosetu-dl https://novelup.plus/story/xxxxx 10 -1 output -sttf titles.txt -fw
 
 命令格式 (CMD Format) / コマンド形式:
 ```bash 
-syosetul-dl base_url file_path to_path ...
+syosetu-dl base_url file_path to_path ...
 ```
 
 ```bash
