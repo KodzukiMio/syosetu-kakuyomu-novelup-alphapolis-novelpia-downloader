@@ -142,8 +142,6 @@ https://novelup.plus/story/xxxxx
 https://www.alphapolis.co.jp/novel/xxxxx/yyyyy
 ```
 
-# chrome extension
-
 ####打包小说文件/Combine files
 ```bash 
 syosetul-dl combine from_folder to_file_path
@@ -174,6 +172,8 @@ Chapter-72.txt.
 Chapter-81.txt.
 Chapter-82.txt.
 to out.txt
+
+# chrome extension
 
 ## kakuyomu chrome mark Extension
 
