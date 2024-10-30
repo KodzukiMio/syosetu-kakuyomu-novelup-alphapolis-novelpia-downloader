@@ -156,22 +156,9 @@ combine为打包关键词,from_folder为下载小说所在的目录,to_file_path
 
 例如/example:
 
+```bash 
 syosetu-dl combine mynovel out.txt -reg Chapter-[3-8][1-2]
-
-It will combine 
-Chapter-31.txt.
-Chapter-32.txt.
-Chapter-41.txt.
-Chapter-42.txt.
-Chapter-51.txt.
-Chapter-52.txt.
-Chapter-61.txt.
-Chapter-62.txt.
-Chapter-71.txt.
-Chapter-72.txt.
-Chapter-81.txt.
-Chapter-82.txt.
-to out.txt
+```
 
 # chrome extension
 
