@@ -80,7 +80,7 @@ https://ncode.syosetu.com/n7918ic/19/
 
 命令格式 (CMD Format) / コマンド形式:
 ```bash 
-syosetul-dl base_url from to to_path ...
+syosetu-dl base_url from to to_path ...
 ```
 
 ```bash
@@ -144,11 +144,11 @@ https://www.alphapolis.co.jp/novel/xxxxx/yyyyy
 
 #### 打包小说文件/Combine files
 ```bash 
-syosetul-dl combine from_folder to_file_path
+syosetu-dl combine from_folder to_file_path
 ```
  Combine downloaded novel files from the specified directory into the output file path.
 ```bash 
-syosetul-dl combine from_folder to_file_path -reg select_regex
+syosetu-dl combine from_folder to_file_path -reg select_regex
 ```
 Combine downloaded novel files from the specified directory into the output file path, using a regex to select the filenames to include.
 
