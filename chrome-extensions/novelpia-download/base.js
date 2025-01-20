@@ -13,10 +13,9 @@ __novelpia_dl.save_file = function (content, fileName, mimeType = 'text/plain') 
     }, 0);
 }
 __novelpia_dl.decode = function (str) {
-    const base64Pattern = /^[A-Za-z0-9+/=]+$/;
-    return str.split('\n').filter(line => {
-        const trimmedLine = line.trim();
-        return !(trimmedLine.length > 8 && base64Pattern.test(trimmedLine));
+    const base64LikePattern = /(?:[A-Za-z0-9+/]{8,}=?=?)(?:\b|(?=[^A-Za-z0-9+/]))/g;
+    return str.split('\n').map(line => {
+        return line.replace(base64LikePattern, '').trim();
     }).join('\n').replace(/&([a-z0-9]+|#[0-9]{1,6}|#x[0-9a-f]{1,6});/ig, function (match, p1) {
         if (p1.charAt(0) === '#') {
             return String.fromCharCode(p1.charAt(1) === 'x' ? parseInt(p1.substring(2), 16) : parseInt(p1.substring(1), 10));
@@ -51,6 +50,10 @@ __novelpia_dl.set_page = function (nid, page, callback) {//page -> 0
 }
 __novelpia_dl.global_id = 1;
 __novelpia_dl.collection = null;
+__novelpia_dl.handle_title = function (str) {
+    if (str[0] == 'P') return str.substring(4);//PLUS
+    return str.substring(2);//len -> 2
+}
 __novelpia_dl.collect = function (filename, page, nid, base_url) {
     this.set_page(nid, page, async () => {
         try {
@@ -65,7 +68,7 @@ __novelpia_dl.collect = function (filename, page, nid, base_url) {
                     const data = JSON.parse(await this.getfrom_url(url)).s;
                     let str = "";
                     for (let idx = 0; idx < data.length; idx++) str += data[idx].text;
-                    this.save_file(titles[idx++].children[1].children[0].innerText + this.decode(str.replace(/<[^>]+>/g, '')), `${filename}-${this.global_id++}`);
+                    this.save_file(this.handle_title(titles[idx++].children[1].children[0].innerText) + this.decode(str.replace(/<[^>]+>/g, '')), `${filename}-${this.global_id++}`);
                     this.collection.set(node.id, true);
                 });
             }, Promise.resolve());
