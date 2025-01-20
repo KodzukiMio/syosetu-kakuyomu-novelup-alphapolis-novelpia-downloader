@@ -8,6 +8,7 @@
             style="color: rgb(47, 231, 255);">ignore</span> button to set the default block type.
         If the blacklist or following-list is updated, the search page should also be refreshed (not navigated back).
     </span>
+    <script src="utility.js"></script>
     <script src="main.js"></script>
 </body>
 <br>
@@ -24,7 +25,8 @@
     <br>
     <span style="color: rgb(190, 0, 0);">Finally, reload the search page.(not rollback)</span>
     <br>
-    <span style="color: greenyellow;">This plugin works on https://kakuyomu.jp/search*<br>https://kakuyomu.jp/tags/*</span>
+    <span style="color: greenyellow;">This plugin works on
+        https://kakuyomu.jp/search*<br>https://kakuyomu.jp/tags/*</span>
     <br>
     <span style="color: yellow">This plugin requires refreshing the search page twice when it's updated
         or
@@ -35,4 +37,19 @@
 </span>
 <br>
 <button id="clear_storage" style="color: red;">clear storage</button>
+
+<div>
+    <h2>Extra Blacklist</h2>
+    <div style="font-size: 150%;">
+        When you visit an author's profile page, you will find a button next to their name that displays either 'Block'
+        or 'UnBlock'.<br>
+        Clicking this button toggles between blocking and unblocking the author. Authors added to the additional
+        blacklist can be found at <a href="https://kakuyomu.jp/settings/blocklist"
+            style="color: greenyellow;">https://kakuyomu.jp/settings/blocklist<a>, where their names will be highlighted
+                in <span style="color: rgb(190, 0, 0);">red</span>.
+                <br> Finally, please avoid blocking authors you are following, or adding authors already on the
+                blacklist to the additional blacklist again.
+    </div>
+</div>
+
 </html>

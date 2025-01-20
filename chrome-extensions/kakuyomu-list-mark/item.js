@@ -20,6 +20,7 @@ __kkym__plugins__.update = async function () {
     }
 }
 __kkym__plugins__.run = async function () {
+    await bkmanager.init_data();
     this.test();
     let data = await this.get();
     if (!data) data = await this.update();
@@ -38,24 +39,26 @@ __kkym__plugins__.getfrom_url = async function (url) {
 __kkym__plugins__.settype = function (umap, nodes, type, filter = null) {
     nodes.forEach(link => {
         try {
-            if (umap.has(link.textContent)) {//must use textContent,not innerText;
+            let bk = bkmanager.has(link.textContent);
+            if (umap.has(link.textContent) || bk) {//must use textContent,not innerText;
                 let is_tag = false;
                 let pnode = link.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement;
                 if (window.location.href.indexOf("/tags/") != -1) {
                     pnode = link.parentElement.parentElement.parentElement.parentElement;
                     is_tag = true;
                 }
+                let col = bk ? "red" : "rgb(0,255,0)";
                 if (filter) {
                     if (filter.has(link.textContent)) pnode.remove();//backgroundColor
                     else {
-                        if (is_tag) pnode.style.backgroundColor = "rgb(0,255,0)";
-                        else pnode.style.color = "rgb(0,255,0)";
+                        if (is_tag) pnode.style.backgroundColor = col;
+                        else pnode.style.color = col;
                     }
                 } else {
                     if (type == 'ignore') pnode.remove();
                     else {
-                        if (is_tag) pnode.style.backgroundColor = "rgb(0,255,0)";
-                        else pnode.style.color = type;
+                        if (is_tag) pnode.style.backgroundColor = col;
+                        else pnode.style.color = bk ? "red" : type;
                     }
                 }
             }

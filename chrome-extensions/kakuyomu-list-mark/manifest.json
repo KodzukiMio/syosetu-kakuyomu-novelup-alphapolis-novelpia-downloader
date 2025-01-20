@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "kakuyomu blacklist and following",
   "description": "author: https://github.com/KodzukiMio",
-  "version": "1.0",
+  "version": "20250120",
   "action": {
     "default_popup": "main.html",
     "default_icon": "favicon.png"
@@ -10,12 +10,16 @@
   "permissions": ["storage"],
   "content_scripts": [
     {
-      "js": ["item.js"],
-      "matches": ["https://kakuyomu.jp/search*","https://kakuyomu.jp/tags/*"]
+      "js": ["utility.js", "item.js"],
+      "matches": ["https://kakuyomu.jp/search*", "https://kakuyomu.jp/tags/*"]
     },
     {
-      "js": ["mark.js"],
+      "js": ["utility.js", "mark.js"],
       "matches": ["https://kakuyomu.jp/users/*/following_users*"]
+    },
+    {
+      "js": ["utility.js", "adt_bkusr.js"],
+      "matches": ["https://kakuyomu.jp/users/*","https://kakuyomu.jp/settings/blocklist"]
     }
   ]
 }
