@@ -13,7 +13,11 @@ __novelpia_dl.save_file = function (content, fileName, mimeType = 'text/plain') 
     }, 0);
 }
 __novelpia_dl.decode = function (str) {
-    return str.replace(/&([a-z0-9]+|#[0-9]{1,6}|#x[0-9a-f]{1,6});/ig, function (match, p1) {
+    const base64Pattern = /^[A-Za-z0-9+/=]+$/;
+    return str.split('\n').filter(line => {
+        const trimmedLine = line.trim();
+        return !(trimmedLine.length > 8 && base64Pattern.test(trimmedLine));
+    }).join('\n').replace(/&([a-z0-9]+|#[0-9]{1,6}|#x[0-9a-f]{1,6});/ig, function (match, p1) {
         if (p1.charAt(0) === '#') {
             return String.fromCharCode(p1.charAt(1) === 'x' ? parseInt(p1.substring(2), 16) : parseInt(p1.substring(1), 10));
         } else {
@@ -51,7 +55,9 @@ __novelpia_dl.collect = function (filename, page, nid, base_url) {
     this.set_page(nid, page, async () => {
         try {
             const nodes = document.querySelectorAll('[id^="bookmark_"]');
+            const titles = document.querySelectorAll('.ep_style5');
             let bflag = true;
+            let idx = 0;
             let promises = Array.from(nodes).reduce((promiseChain, node) => {
                 return promiseChain.then(async () => {
                     if (this.collection.has(node.id)) return (bflag = false);
@@ -59,7 +65,7 @@ __novelpia_dl.collect = function (filename, page, nid, base_url) {
                     const data = JSON.parse(await this.getfrom_url(url)).s;
                     let str = "";
                     for (let idx = 0; idx < data.length; idx++) str += data[idx].text;
-                    this.save_file(this.decode(str.replace(/<[^>]+>/g, '')), `${filename}-${this.global_id++}`);
+                    this.save_file(titles[idx++].children[1].children[0].innerText + this.decode(str.replace(/<[^>]+>/g, '')), `${filename}-${this.global_id++}`);
                     this.collection.set(node.id, true);
                 });
             }, Promise.resolve());
@@ -76,8 +82,7 @@ __novelpia_dl.handle = async function () {
     if (window.location.href.indexOf("/novel/") != -1) type = __novelpia_dl.NOVEL;
     else type = __novelpia_dl.VIEWER;
     let url = window.location.href;
-    if (url != window.location.href) return;
-    if (type == __novelpia_dl.VIEWER) __novelpia_dl.save_file(this.decode(document.getElementById("novel_drawing").innerText.replace(/<[^>]+>/g, '')), `${url.replace(/[^0-9\s]/g, '')}.txt`);
+    if (type == __novelpia_dl.VIEWER) __novelpia_dl.save_file(document.querySelector('.menu-top-title').textContent + this.decode(document.getElementById("novel_drawing").innerText.replace(/<[^>]+>/g, '')), `${url.replace(/[^0-9\s]/g, '')}.txt`);
     else if (type == __novelpia_dl.NOVEL) {
         let filename = `novel-${url.match(/\d+/)?.[0]}`;
         this.global_id = 1;
