@@ -86,7 +86,7 @@ __novelpia_dl.handle = async function () {
     else type = __novelpia_dl.VIEWER;
     let url = window.location.href;
     if (type == __novelpia_dl.VIEWER) {
-        let title = window.location.href.indexOf("jp") != -1 ? document.getElementsByClassName("cut_line_one")[0].innerText.trim() : document.querySelector('.menu-top-title').textContent.trim();
+        let title = window.location.href.indexOf("jp") != -1 ? document.getElementsByClassName("cut_line_one")[1].innerText.trim() : document.querySelector('.menu-top-title').textContent.trim();
         __novelpia_dl.save_file(title + "\n\n" + this.decode(document.getElementById("novel_drawing").innerText.replace(/<[^>]+>/g, '')).trim(), `${url.replace(/[^0-9\s]/g, '')}.txt`);
     }
     else if (type == __novelpia_dl.NOVEL) {
