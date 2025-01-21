@@ -13,7 +13,7 @@ __novelpia_dl.save_file = function (content, fileName, mimeType = 'text/plain') 
     }, 0);
 }
 __novelpia_dl.decode = function (str) {
-    const base64LikePattern = /(?:[A-Za-z0-9+/]{8,}=?=?)(?:\b|(?=[^A-Za-z0-9+/]))/g;
+    const base64LikePattern = /(?:[A-Za-z0-9+/]{16,}=?=?)(?:\b|(?=[^A-Za-z0-9+/]))/g;
     return str.split('\n').map(line => {
         return line.replace(base64LikePattern, '').trim();
     }).join('\n').replace(/&([a-z0-9]+|#[0-9]{1,6}|#x[0-9a-f]{1,6});/ig, function (match, p1) {
@@ -68,7 +68,7 @@ __novelpia_dl.collect = function (filename, page, nid, base_url) {
                     const data = JSON.parse(await this.getfrom_url(url)).s;
                     let str = "";
                     for (let idx = 0; idx < data.length; idx++) str += data[idx].text;
-                    this.save_file(this.handle_title(titles[idx++].children[1].children[0].innerText) + this.decode(str.replace(/<[^>]+>/g, '')), `${filename}-${this.global_id++}`);
+                    this.save_file(this.handle_title(titles[idx++].children[1].children[0].innerText).trim() + "\n\n" + this.decode(str.replace(/<[^>]+>/g, '')).trim(), `${filename}-${this.global_id++}`);
                     this.collection.set(node.id, true);
                 });
             }, Promise.resolve());
@@ -85,7 +85,10 @@ __novelpia_dl.handle = async function () {
     if (window.location.href.indexOf("/novel/") != -1) type = __novelpia_dl.NOVEL;
     else type = __novelpia_dl.VIEWER;
     let url = window.location.href;
-    if (type == __novelpia_dl.VIEWER) __novelpia_dl.save_file(document.querySelector('.menu-top-title').textContent + this.decode(document.getElementById("novel_drawing").innerText.replace(/<[^>]+>/g, '')), `${url.replace(/[^0-9\s]/g, '')}.txt`);
+    if (type == __novelpia_dl.VIEWER) {
+        let title = window.location.href.indexOf("jp") != -1 ? document.getElementsByClassName("cut_line_one")[0].innerText.trim() : document.querySelector('.menu-top-title').textContent.trim();
+        __novelpia_dl.save_file(title + "\n\n" + this.decode(document.getElementById("novel_drawing").innerText.replace(/<[^>]+>/g, '')).trim(), `${url.replace(/[^0-9\s]/g, '')}.txt`);
+    }
     else if (type == __novelpia_dl.NOVEL) {
         let filename = `novel-${url.match(/\d+/)?.[0]}`;
         this.global_id = 1;
