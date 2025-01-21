@@ -1,8 +1,8 @@
 # syosetu-downloader
 
-一个小工具，用于在日本小说网站下载小说章节。  
-*A small tool for downloading novel chapters from Japanese novel websites.*  
-*日本の小説サイトから小説の章をダウンロードするためのツールです。*
+一个小工具，用于在小说网站下载小说章节。  
+*A small tool for downloading novel chapters from novel websites.*  
+*小説サイトから小説の章をダウンロードするためのツールです。*
 
 ## 需要 (Requirements) / 必要条件
 - .Net Framework 8.0
