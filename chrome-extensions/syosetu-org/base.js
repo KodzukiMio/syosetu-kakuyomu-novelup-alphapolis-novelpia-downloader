@@ -72,8 +72,10 @@
                     if (span.style.fontSize === '120%') match.push(span);
                 });
                 let _title = match[1].innerText;
-                let text_main = document.getElementById("honbun").innerText;
-                let text_sub = document.getElementById("atogaki").innerText;
+                let text_main = document.getElementById("honbun");
+                text_main = text_main ? text_main.innerText : "";
+                let text_sub = document.getElementById("atogaki");
+                text_sub = text_sub ? text_sub.innerText : "";
                 return {
                     title: _title ? _title : "",
                     main: text_main ? text_main : "",
@@ -104,12 +106,21 @@
                 window.URL.revokeObjectURL(url);
             }, 0);
         },
-        savePage(fileName) {
-            const content = this.getContent();
-            if (content) {
-                this.save_file(content, fileName);
-            } else {
-                console.error("No content to save.");
+        async savePage(fileName) {
+            let count = 0;
+            let content = null;
+            content = this.getContent();
+            while (true) {
+                if (count > 30) {
+                    console.error("Failed to get content after 30 attempts.");
+                    return;
+                }
+                if (content) {
+                    this.save_file(content, fileName);
+                    return;
+                }
+                await this.sleep(1000);
+                ++count;
             }
         },
         async setState(obj) {
@@ -157,7 +168,7 @@
                 window.location.href = `https://syosetu.org/novel/${this.getPage()}/${this.last_state.cur}.html`;
                 return;
             }
-            this.savePage(`Chapter-${this.last_state.cur}.txt`);
+            await this.savePage(`Chapter-${this.last_state.cur}.txt`);
             this.last_state.cur++;
             if (this.last_state.cur > this.last_data.last || this.last_data.last == 0) {
                 await this.resetAll();
