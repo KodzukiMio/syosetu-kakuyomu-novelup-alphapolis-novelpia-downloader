@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "syosetu-org-downloader",
+  "description": "author: https://github.com/KodzukiMio",
+  "version": "20250510",
+  "action": {
+    "default_popup": "main.html",
+    "default_icon": "favicon.png"
+  },
+  "permissions": ["storage"],
+  "content_scripts": [
+    {
+      "js": ["base.js"],
+      "matches": [
+        "https://syosetu.org/novel/*"
+      ]
+    }
+  ]
+}
