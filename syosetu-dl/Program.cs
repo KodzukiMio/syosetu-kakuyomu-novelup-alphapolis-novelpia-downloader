@@ -99,12 +99,16 @@ namespace syosetu_dl {
         }
         //https://syosetu.org/novel/xxxxx
         public static async Task<StringBuilder> syosetu_org(string base_url, int i) {
+            throw new Exception("syosetu.org -> CloudFlare");
             StringBuilder str = new StringBuilder();
             using (HttpClient client = new HttpClient()) {
                 client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0");
                 client.DefaultRequestHeaders.Add("Cookie", "over18=yes");
                 var doc = new HtmlDocument();
-                doc.LoadHtml(await (await client.GetAsync($"{base_url}/{i}.html")).Content.ReadAsStringAsync());
+                //Console.WriteLine($"{base_url}/{i}.html");
+                string html=await (await client.GetAsync($"{base_url}/{i}.html")).Content.ReadAsStringAsync();
+                //Console.WriteLine(html);
+                doc.LoadHtml(html);
                 var pTags = doc.DocumentNode.SelectNodes("//p");
                 if (pTags != null) {
                     var maegaki = doc.DocumentNode.SelectSingleNode("//div[@id='maegaki']");
@@ -361,7 +365,9 @@ namespace syosetu_dl {
                     WriteText(ref file, ref result, b_fw);
                     if (b_si) SaveImme();
                 } catch (Exception e) {
-                    //Console.WriteLine(e.ToString());
+                    Console.WriteLine("Debug-Message---------------------------------------------------------------------------");
+                    Console.WriteLine(e.ToString());
+                    Console.WriteLine("----------------------------------------------------------------------------------------");
                     Console.WriteLine(msg);
                     Thread.Sleep(60000);
                     i--;
