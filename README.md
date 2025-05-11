@@ -149,7 +149,6 @@ syosetu-dl combine x out.txt -seq "(?<=novel-\d+-)\d+"
 
 Supported Websites:
 * `https://syosetu.org/novel/*`
-* `https://syosetu.org/novel_list/*` (Table of Contents page)
 
 For more details, see the `\chrome-extensions\syosetu-org` directory.
 
