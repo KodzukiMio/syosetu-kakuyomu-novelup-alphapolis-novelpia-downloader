@@ -143,7 +143,6 @@ syosetu-dl combine x out.txt -seq "(?<=novel-\d+-)\d+"
 
 支持的网站:
 * `https://syosetu.org/novel/*`
-* `https://syosetu.org/novel_list/*` (目录页)
 
 详情请见: `\chrome-extensions\syosetu-org` 目录。
 
