@@ -77,7 +77,11 @@ __novelpia_dl.collect = function (filename, page, nid, base_url) {
                     let str = "";
                     for (let idx = 0; idx < data.length; idx++) str += data[idx].text;
                     let title = titles[idx++].children[1];
-                    let title_text = title.children[0].innerText;
+                    let title_node = title.children[0];
+                    let flag = title_node.children[0].innerText;
+                    title_node.children[0].innerText = "";
+                    let title_text = title_node.innerText;
+                    title_node.children[0].innerText = flag;
                     let ep_text = title.getElementsByClassName("font11")[0].children[0].innerText;
                     this.save_file(ep_text + ' ' + title_text + "\n\n" + this.decode(str.replace(/<[^>]+>/g, '')).trim(), `${filename}-${this.global_id++}`);
                     this.collection.set(node.id, true);
