@@ -37,7 +37,7 @@ __novelpia_dl.set_page = function (nid, page, callback) {//page -> 0
     localStorage[`novel_page_${nid}`] = page.toString();
     const data = new URLSearchParams();
     data.append("novel_no", nid.toString());
-    data.append("sort", localStorage[`novel_sort_${nid}`]);
+    data.append("sort", "DOWN");//"DOWN" - localStorage[`novel_sort_${nid}`]
     data.append("page", localStorage[`novel_page_${nid}`]);
     fetch("/proc/episode_list", {
         method: "POST",
@@ -50,14 +50,22 @@ __novelpia_dl.set_page = function (nid, page, callback) {//page -> 0
 }
 __novelpia_dl.global_id = 1;
 __novelpia_dl.collection = null;
-__novelpia_dl.handle_title = function (str) {
-    if (str[0] == 'P') return str.substring(4);//PLUS
-    return str.substring(2);//len -> 2
+__novelpia_dl.wait_value = async function (evaluate, retry = 64) {
+    let value = evaluate();
+    for (var i = 0; i < retry; ++i) {
+        if (value != null) break;
+        await this.sleep(100);
+        value = evaluate();
+    }
+    if (value == null) {
+        throw new Error("parse error,not content.");
+    }
+    return value;
 }
 __novelpia_dl.collect = function (filename, page, nid, base_url) {
     this.set_page(nid, page, async () => {
         try {
-            const nodes = document.querySelectorAll('[id^="bookmark_"]');
+            const nodes = await this.wait_value(() => document.querySelectorAll('[id^="bookmark_"]'));
             const titles = document.querySelectorAll('.ep_style5');
             let bflag = true;
             let idx = 0;
@@ -68,13 +76,16 @@ __novelpia_dl.collect = function (filename, page, nid, base_url) {
                     const data = JSON.parse(await this.getfrom_url(url)).s;
                     let str = "";
                     for (let idx = 0; idx < data.length; idx++) str += data[idx].text;
-                    this.save_file(this.handle_title(titles[idx++].children[1].children[0].innerText).trim() + "\n\n" + this.decode(str.replace(/<[^>]+>/g, '')).trim(), `${filename}-${this.global_id++}`);
+                    let title = titles[idx++].children[1];
+                    let title_text = title.children[0].innerText;
+                    let ep_text = title.getElementsByClassName("font11")[0].children[0].innerText;
+                    this.save_file(ep_text + ' ' + title_text + "\n\n" + this.decode(str.replace(/<[^>]+>/g, '')).trim(), `${filename}-${this.global_id++}`);
                     this.collection.set(node.id, true);
                 });
             }, Promise.resolve());
             promises.then(() => {
                 if (nodes.length > 0 && bflag) this.collect(filename, page + 1, nid, base_url);
-            }).catch(() => console.log("Download finish."));
+            }).catch((e) => console.log(e));//print error callstack and finish download.
         } catch (e) {
             console.error(e);
         };
@@ -86,8 +97,30 @@ __novelpia_dl.handle = async function () {
     else type = __novelpia_dl.VIEWER;
     let url = window.location.href;
     if (type == __novelpia_dl.VIEWER) {
-        let title = window.location.href.indexOf("jp") != -1 ? document.getElementsByClassName("cut_line_one")[1].innerText.trim() : document.querySelector('.menu-top-title').textContent.trim();
-        __novelpia_dl.save_file(title + "\n\n" + this.decode(document.getElementById("novel_drawing").innerText.replace(/<[^>]+>/g, '')).trim(), `${url.replace(/[^0-9\s]/g, '')}.txt`);
+        const is_jp = window.location.href.indexOf("jp") != -1;
+        let title = is_jp ? document.getElementsByClassName("cut_line_one")[1].innerText.trim() : document.getElementsByClassName("menu-title-wrapper")[0].textContent.replaceAll("\n", "").trim().replace(/\s+/g, ' ');
+        const source = await this.wait_value(() => document.getElementById("novel_drawing"));
+        let text = null;
+        if (is_jp) {
+            text = this.decode(source.innerText.replace(/<[^>]+>/g, '')).trim();
+        } else {
+            let note = document.getElementById("writer_comments_box");
+            if (note != null) {
+                source.removeChild(note);
+            }
+            let button = document.getElementById("next_epi_btn_bottom");
+            source.removeChild(button);
+            text = this.decode(source.innerText.replace(/<[^>]+>/g, '')).trim();
+            if (note != null) {
+                source.appendChild(note);
+                text = text.replace(/\s+$/, '');
+                if (text[text.length - 1] == '\n') text += "\n\n\n";
+                else text += "\n\n\n\n";
+                text += note.innerText.trim();
+            }
+            source.appendChild(button);
+        }
+        __novelpia_dl.save_file(title + "\n\n" + text, `${url.replace(/[^0-9\s]/g, '')}.txt`);
     }
     else if (type == __novelpia_dl.NOVEL) {
         let filename = `novel-${url.match(/\d+/)?.[0]}`;
