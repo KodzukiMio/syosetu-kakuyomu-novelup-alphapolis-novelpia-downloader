@@ -83,7 +83,7 @@ __novelpia_dl.collect = function (filename, page, nid, base_url) {
                     let title_text = title_node.innerText;
                     title_node.children[0].innerText = flag;
                     let ep_text = title.getElementsByClassName("font11")[0].children[0].innerText;
-                    this.save_file(ep_text + ' ' + title_text + "\n\n" + this.decode(str.replace(/<[^>]+>/g, '')).trim(), `${filename}-${this.global_id++}`);
+                    this.save_file(ep_text + ' ' + title_text + "\n\n" + this.decode(str.replace(/<(?:\/?[a-zA-Z]+)[^>]*>/g, '')).trim(), `${filename}-${this.global_id++}`);
                     this.collection.set(node.id, true);
                 });
             }, Promise.resolve());
@@ -114,7 +114,7 @@ __novelpia_dl.handle = async function () {
             }
             let button = document.getElementById("next_epi_btn_bottom");
             source.removeChild(button);
-            text = this.decode(source.innerText.replace(/<[^>]+>/g, '')).trim();
+            text = this.decode(source.innerText).trim();
             if (note != null) {
                 source.appendChild(note);
                 text = text.replace(/\s+$/, '');

@@ -1,10 +1,10 @@
 (async () => {
     function changeType(button, tag) {
-        if (tag == "UnBlock") {
+        if (tag == "UnBlocked") {
             button.textContent = "Block";
             button.style.color = "red";
         } else {
-            button.textContent = "UnBlock";
+            button.textContent = "UnBlocked";
             button.style.color = "green";
         }
         return (button.style.color == "green");
@@ -25,7 +25,7 @@
         let button = document.createElement("button");
         const name = bkmanager.get_name();
         await bkmanager.init_data();
-        changeType(button, await bkmanager.check(name) ? "UnBlock" : "Block");
+        changeType(button, await bkmanager.check(name) ? "UnBlocked" : "Block");
         button.style.backgroundColor = "white";
         button.onclick = () => this.handle(button, name);
         bt.appendChild(button);
