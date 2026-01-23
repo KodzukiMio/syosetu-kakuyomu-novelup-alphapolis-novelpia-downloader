@@ -1,30 +1,218 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 
-<body style="background-color: black;color: white;">
-    <span style="font-size:150%">
-        This plugin is used to download novels on web browsers. It supports downloading both complete novels and
-        individual chapters.<br><br>
-        <span style="color: rgb(251, 255, 9);">Paid chapters (unpaid) are not supported.</span><br><br>
-        Before using, please <span style="color: greenyellow;">log in</span> to your Novelpia
-        account.<br><br>
-        <span style="color: greenyellow;">Supported</span> URLs:<br>
-        https://novelpia.<span style="color: rgb(255, 0, 238);">jp</span>/<span
-            style="color: rgb(0, 255, 60);">novel</span>/*<br>
-        https://novelpia.<span style="color: rgb(255, 0, 238);">jp</span>/<span
-            style="color: rgb(255, 153, 0);">viewer</span>/*<br>
-        https://novelpia.<span style="color: rgb(174, 0, 255);">com</span>/<span
-            style="color: rgb(0, 255, 60);">novel</span>/*<br>
-        https://novelpia.<span style="color: rgb(174, 0, 255);">com</span>/<span
-            style="color: rgb(255, 153, 0);">viewer</span>/*<br><br>
-        Navigate to the novel page you wish to download and click the <button id="novelpia-dl">download</button> button
-        to begin.
-        <br><br>
-        After clicking the download button, please wait for a moment while the program gathers resource information. A
-        "Chrome wants to save multiple files" pop-up may appear during the download process. Please click <span
-            style="color: greenyellow;">OK</span> to
-        proceed, and the download will begin shortly.
-        <br>
-    </span>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Novelpia Downloader</title>
+    <style>
+        :root {
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --text-main: #e0e0e0;
+            --text-dim: #b0b0b0;
+            --primary: #4caf50;
+            --secondary: #ff9800;
+            --accent-jp: #ff4081;
+            --accent-com: #9c27b0;
+            --warning: #ffeb3b;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            max-width: 450px;
+            width: 100%;
+            border: 1px solid #333;
+        }
+
+        h1 {
+            margin-top: 0;
+            font-size: 22px;
+            text-align: center;
+            color: #fff;
+            border-bottom: 2px solid #333;
+            padding-bottom: 15px;
+        }
+
+        .description {
+            line-height: 1.6;
+            font-size: 14px;
+            color: var(--text-dim);
+            margin-bottom: 15px;
+        }
+
+        .warning-box {
+            background: rgba(255, 235, 59, 0.1);
+            border-left: 4px solid var(--warning);
+            padding: 12px;
+            margin: 15px 0;
+            color: var(--warning);
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .url-section {
+            background: #252525;
+            padding: 12px;
+            border-radius: 8px;
+            font-family: 'Consolas', monospace;
+            font-size: 12px;
+            margin: 15px 0;
+            border: 1px solid #333;
+        }
+
+        .url-item {
+            margin: 4px 0;
+        }
+
+        .jp {
+            color: var(--accent-jp);
+        }
+
+        .com {
+            color: var(--accent-com);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+            align-items: flex-start;
+        }
+
+        .btn-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        button {
+            width: 100%;
+            height: 54px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+        }
+
+        #novelpia-dl {
+            background-color: var(--primary);
+        }
+
+        #novelpia-notice-dl {
+            background-color: var(--secondary);
+        }
+
+        button:hover {
+            filter: brightness(1.1);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        button:active {
+            transform: translateY(2px);
+            filter: brightness(0.8);
+            box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.4);
+        }
+
+        button:disabled {
+            background-color: #555 !important;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        .sub-note {
+            font-size: 10px;
+            color: var(--secondary);
+            margin-top: 6px;
+            font-style: italic;
+        }
+
+        footer {
+            margin-top: 25px;
+            font-size: 11px;
+            text-align: center;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .highlight {
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .important-note {
+            color: var(--warning);
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Novelpia Downloader</h1>
+
+        <div class="warning-box">
+            ⚠️ Paid chapters (unlocked) are not supported.
+        </div>
+
+        <div class="description">
+            1. <span class="highlight">Log in</span> to your account.<br>
+            2. Open a novel or viewer page.<br>
+            3. <span class="important-note">Ensure the page is fully loaded</span> before starting.<br>
+            4. Click a button below.
+        </div>
+
+        <div class="url-section">
+            <div class="url-item">novelpia.<span class="jp">jp</span>/novel/*</div>
+            <div class="url-item">novelpia.<span class="jp">jp</span>/viewer/*</div>
+            <div class="url-item">novelpia.<span class="com">com</span>/novel/*</div>
+            <div class="url-item">novelpia.<span class="com">com</span>/viewer/*</div>
+        </div>
+
+        <div class="button-group">
+            <div class="btn-wrapper">
+                <button id="novelpia-dl">Download Novel</button>
+                <span style="font-size: 10px; margin-top: 6px; visibility: hidden;">placeholder</span>
+            </div>
+
+            <div class="btn-wrapper">
+                <button id="novelpia-notice-dl">Download Notices</button>
+                <span class="sub-note">* Novel page only</span>
+            </div>
+        </div>
+
+        <footer>
+            <span style="color: #999;">Please wait for resource gathering after clicking.</span><br>
+            <span class="important-note">Do not switch or close the tab during the download.</span>
+        </footer>
+    </div>
     <script src="base.js"></script>
 </body>
 

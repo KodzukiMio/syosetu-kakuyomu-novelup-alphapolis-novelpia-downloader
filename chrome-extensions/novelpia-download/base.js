@@ -1,4 +1,7 @@
 var __novelpia_dl = __novelpia_dl || {};
+__novelpia_dl.global_id = 1;
+__novelpia_dl.collection = null;
+
 __novelpia_dl.save_file = function (content, fileName, mimeType = 'text/plain') {
     const blob = new Blob([content], { type: mimeType });
     const url = URL.createObjectURL(blob);
@@ -12,6 +15,7 @@ __novelpia_dl.save_file = function (content, fileName, mimeType = 'text/plain') 
         window.URL.revokeObjectURL(url);
     }, 0);
 }
+
 __novelpia_dl.decode = function (str) {
     const base64LikePattern = /(?:[A-Za-z0-9+/]{16,}=?=?)(?:\b|(?=[^A-Za-z0-9+/]))/g;
     return str.split('\n').map(line => {
@@ -25,6 +29,7 @@ __novelpia_dl.decode = function (str) {
         }
     });
 };
+
 __novelpia_dl.getfrom_url = async function (url) {
     const rep = (await fetch(url, {
         method: 'GET',
@@ -33,11 +38,12 @@ __novelpia_dl.getfrom_url = async function (url) {
     if (!rep.ok) throw new Error('Network response was not ok');
     return await rep.text();
 }
-__novelpia_dl.set_page = function (nid, page, callback) {//page -> 0
+
+__novelpia_dl.set_page = function (nid, page, callback) {
     localStorage[`novel_page_${nid}`] = page.toString();
     const data = new URLSearchParams();
     data.append("novel_no", nid.toString());
-    data.append("sort", "DOWN");//"DOWN" - localStorage[`novel_sort_${nid}`]
+    data.append("sort", "DOWN");
     data.append("page", localStorage[`novel_page_${nid}`]);
     fetch("/proc/episode_list", {
         method: "POST",
@@ -48,8 +54,7 @@ __novelpia_dl.set_page = function (nid, page, callback) {//page -> 0
         callback();
     });
 }
-__novelpia_dl.global_id = 1;
-__novelpia_dl.collection = null;
+
 __novelpia_dl.wait_value = async function (evaluate, retry = 64) {
     let value = evaluate();
     for (var i = 0; i < retry; ++i) {
@@ -62,6 +67,7 @@ __novelpia_dl.wait_value = async function (evaluate, retry = 64) {
     }
     return value;
 }
+
 __novelpia_dl.collect = function (filename, page, nid, base_url) {
     this.set_page(nid, page, async () => {
         try {
@@ -89,12 +95,34 @@ __novelpia_dl.collect = function (filename, page, nid, base_url) {
             }, Promise.resolve());
             promises.then(() => {
                 if (nodes.length > 0 && bflag) this.collect(filename, page + 1, nid, base_url);
-            }).catch((e) => console.log(e));//print error callstack and finish download.
+            }).catch((e) => console.log(e));
         } catch (e) {
             console.error(e);
         };
     });
 }
+
+__novelpia_dl.handle_notices = async function () {
+    const noticeRows = document.querySelectorAll('.notice_table tr.ep_style4');
+    if (noticeRows.length === 0) return;
+    let combinedContent = "Author Notices Collection\n\n";
+    let filename = `notices-${window.location.href.match(/\d+/)?.[0]}.txt`;
+    const base_url = window.location.href.substring(0, window.location.href.lastIndexOf('/', 20) + 1) + 'proc/viewer_data/';
+    for (let tr of noticeRows) {
+        const onclickAttr = tr.querySelector('td[onclick]').getAttribute('onclick');
+        const idMatch = onclickAttr.match(/\/viewer\/(\d+)/);
+        if (idMatch) {
+            try {
+                const data = JSON.parse(await this.getfrom_url(base_url + idMatch[1])).s;
+                let content = "";
+                for (let i = 0; i < data.length; i++) content += data[i].text;
+                combinedContent += `========================================\nTitle: ${tr.querySelector('b').innerText.trim()}\nDate: ${tr.querySelector('.ep_style3').innerText.trim()}\n----------------------------------------\n\n${this.decode(content.replace(/<(?:\/?[a-zA-Z]+)[^>]*>/g, '')).trim()}\n\n\n`;
+            } catch (e) { }
+        }
+    }
+    this.save_file(combinedContent, filename);
+};
+
 __novelpia_dl.handle = async function () {
     let type = null;
     if (window.location.href.indexOf("/novel/") != -1) type = __novelpia_dl.NOVEL;
@@ -133,10 +161,12 @@ __novelpia_dl.handle = async function () {
         this.collect(filename, 0, window.location.href.match(/\d+/)?.[0], window.location.href.substring(0, window.location.href.lastIndexOf('/', 20) + 1) + 'proc/viewer_data/');
     } else window.console.log("no choice");
 };
+
 __novelpia_dl.sleep = async function (delay) {
     return new Promise((resolve) => setTimeout(resolve, delay));
 }
-__novelpia_dl.listener = async function (key, value, callback) {//value != null
+
+__novelpia_dl.listener = async function (key, value, callback) {
     try {
         while (true) {
             if ((await this.get(key)) == value) {
@@ -147,25 +177,49 @@ __novelpia_dl.listener = async function (key, value, callback) {//value != null
         }
     } catch (e) { }
 };
+
 __novelpia_dl.set_ok = function (key) {
     this.set(key, __novelpia_dl.OK);
 }
+
 __novelpia_dl.set_listener = async function (key, callback) {
     this.listener(key, __novelpia_dl.OK, callback);
 }
+
 __novelpia_dl.VIEWER = 0xfff0;
 __novelpia_dl.NOVEL = 0xfff1;
 __novelpia_dl.OK = 0xfff2;
 __novelpia_dl.STATE = "novelpia_listen";
+
 __novelpia_dl.set = function (key, value, callback = () => { }) {
     let data = {};
     data[key] = value;
     chrome.storage.local.set(data, callback);
 };
+
 __novelpia_dl.get = function (key) {
     return new Promise((resolve, reject) => chrome.storage.local.get([key], result => resolve(result[key])));
 };
 (async () => {
-    if (document.getElementById('novelpia-dl')) document.addEventListener('DOMContentLoaded', () => document.getElementById('novelpia-dl').addEventListener('click', async () => __novelpia_dl.set_ok(__novelpia_dl.STATE)));
-    else __novelpia_dl.set_listener(__novelpia_dl.STATE, () => __novelpia_dl.handle());
+    if (document.getElementById('novelpia-dl')) {
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('novelpia-dl').addEventListener('click', async () => __novelpia_dl.set_ok(__novelpia_dl.STATE));
+            const nBtn = document.getElementById('novelpia-notice-dl');
+            if (nBtn) {
+                nBtn.addEventListener('click', async () => {
+                    chrome.storage.local.set({ "is_notice": true }, () => __novelpia_dl.set_ok(__novelpia_dl.STATE));
+                });
+            }
+        });
+    } else {
+        __novelpia_dl.set_listener(__novelpia_dl.STATE, async () => {
+            const res = await new Promise(r => chrome.storage.local.get(["is_notice"], r));
+            if (res.is_notice) {
+                await __novelpia_dl.handle_notices();
+                chrome.storage.local.set({ "is_notice": false });
+            } else {
+                await __novelpia_dl.handle();
+            }
+        });
+    }
 })();

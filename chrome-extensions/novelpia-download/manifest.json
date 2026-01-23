@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "novelpia-download",
   "description": "author: https://github.com/KodzukiMio",
-  "version": "20251214",
+  "version": "20260123",
   "action": {
     "default_popup": "main.html",
     "default_icon": "favicon.png"
